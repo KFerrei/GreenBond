@@ -1,13 +1,18 @@
-//
-//  RegisterView.swift
+//  ContentView.swift
 //  GreenBond
-//
 //  Created by FERREIRA Kévin on 20/6/2024.
-//
+//  Modified by FERREIRA Kévin on 21/6/2024.
 
 import SwiftUI
+import PhotosUI
+import Firebase
+import FirebaseFirestore
+import FirebaseStorage
 
 struct RegisterView: View {
+    
+    let genders = ["Mr", "Ms", "Mx"]
+    let cities = ["Berlin, Germany", "Paris, France"]
     
     @State var emailID : String = ""
     @State var password: String = ""
@@ -17,11 +22,13 @@ struct RegisterView: View {
     @State var userBirthDate: Date = Date()
     @State var userCity: String = ""
     @State var userProfilePicData : Data?
+    @State var showImagePicker : Bool = false
+    @State var photoItem: PhotosPickerItem?
+    
+    @State var showError: Bool =  false
+    @State var errorMessage: String = ""
     
     @Environment(\.dismiss) var dismiss
-    
-    let genders = ["man", "women", "other"]
-    let cities = ["Berlin, Germany", "Paris, France"]
     
     var body: some View {
         ZStack {
@@ -51,28 +58,32 @@ struct RegisterView: View {
                         }
                         
                     }
-                    .clipShape(/*@START_MENU_TOKEN@*/Circle()/*@END_MENU_TOKEN@*/)
                     .frame(width: 85, height: 85)
-                    .padding(.top, 10)
-
-                    
-                    Picker("gender", selection: $userGender){
-                        ForEach(genders, id: \.self) {
-                            Text($0)
-                        }
+                    .clipShape(/*@START_MENU_TOKEN@*/Circle()/*@END_MENU_TOKEN@*/)
+                    .contentShape(/*@START_MENU_TOKEN@*/Circle()/*@END_MENU_TOKEN@*/)
+                    .onTapGesture {
+                        showImagePicker.toggle()
                     }
-                    .hAlign(.leading)
-                    .tint(.black)
-                    .border(1, .gray.opacity(0.5))
                     
-                    TextField("given name", text: $userGivenName)
-                        .textContentType(.givenName)
-                        .border(1, .gray.opacity(0.5))
+                    HStack{
+                        Picker("gender", selection: $userGender){
+                            ForEach(genders, id: \.self) {
+                                Text($0)
+                            }
+                        }
+                        //.hAlign(.leading)
+                        .tint(.black)
+                        //.border(1, .gray.opacity(0.5))
                         
-                    
-                    TextField("family name", text: $userFamilyName)
-                        .textContentType(.familyName)
-                        .border(1, .gray.opacity(0.5))
+                        TextField("given name", text: $userGivenName)
+                            .textContentType(.givenName)
+                            .border(1, .gray.opacity(0.5))
+                        
+                        
+                        TextField("family name", text: $userFamilyName)
+                            .textContentType(.familyName)
+                            .border(1, .gray.opacity(0.5))
+                    }
                     
                     TextField("email", text: $emailID)
                         .textContentType(.emailAddress)
@@ -97,16 +108,14 @@ struct RegisterView: View {
                     .border(1, .gray.opacity(0.5))
                 
                     
-                    Button{
-                        
-                    } label: {
+                    Button(action: registerUser){
                         Text("sign up")
                             .foregroundColor(.white)
                             .hAlign(.center)
                             .fillView(.black)
-                    }.padding(.top, 10)
-
-                    
+                    }
+                    .disableWithOpacity(isFormValid())
+                    .padding(.top, 10)
                 }
                 
                 HStack{
@@ -123,13 +132,81 @@ struct RegisterView: View {
                 .vAlign(.bottom)
                 
             }
-            .vAlign(.center)
+            .vAlign(.top)
             .padding(20)
             .zIndex(1)
+            .photosPicker(isPresented:$showImagePicker, selection: $photoItem)
+            .onChange(of: photoItem){
+                if let photoItem{
+                    Task{
+                        do{
+                            guard let imageData = try await photoItem.loadTransferable(type: Data.self) else{return}
+                            await MainActor.run(body: {
+                                userProfilePicData = imageData
+                            })
+                        }catch{}
+                    }
+                }
+            }
+            
             
         }
+        .onAppear {
+                    userGender = genders[0]
+                    userCity = cities[0]
+                }
+        .alert(errorMessage, isPresented: $showError, actions: {})
         
     }
+    
+    func isFormValid() -> Bool {
+        let ageComponents = Calendar.current.dateComponents([.year], from: userBirthDate, to: Date())
+        let age = ageComponents.year ?? 0
+        return emailID.isEmpty ||
+               password.isEmpty ||
+               userGender.isEmpty ||
+               userGivenName.isEmpty ||
+               userFamilyName.isEmpty ||
+               age <= 16 ||
+               userCity.isEmpty ||
+               userProfilePicData == nil
+    }
+    
+    func registerUser(){
+        Task{
+            do{
+                try await Auth.auth().createUser(withEmail: emailID, password: password)
+                
+                guard let userUID = Auth.auth().currentUser?.uid else{return}
+                guard let imageData = userProfilePicData else{return}
+                
+                let storageRef = Storage.storage().reference().child("Profile_Images").child(userUID)
+                let _ = try await storageRef.putDataAsync(imageData)
+                let dowloadURL = try await storageRef.downloadURL()
+                
+                let user = User(userGender: userGender, userName: userGivenName, userFamilyName: userFamilyName, userCity: userCity, userBirthDate: userBirthDate, userEmail: emailID, userRegisterDate: Date(), userDatePremium: Date(), userUID: userUID, userProgress: 0)
+                
+                let _ = try Firestore.firestore().collection("Users").document(userUID).setData(from: user, completion:{
+                    error in
+                    if error == nil{
+                    }
+                })
+                
+                
+            }catch{
+                await setError(error)
+            }
+        }
+    }
+    
+    func setError(_ error: Error)async{
+        await MainActor.run(body:{
+            errorMessage = error.localizedDescription
+            showError.toggle()
+        })
+    }
+    
+    
 }
 
 #Preview {

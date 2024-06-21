@@ -1,18 +1,20 @@
-//
-//  LoginView.swift
+//  ContentView.swift
 //  GreenBond
-//
 //  Created by FERREIRA Kévin on 20/6/2024.
-//
+//  Modified by FERREIRA Kévin on 21/6/2024.
 
 import SwiftUI
+import Firebase
 
 struct LoginView: View {
     
     @State var emailID : String = ""
     @State var password: String = ""
     
-    @State var createAccount: Bool=false
+    @State var createAccount: Bool = false
+    @State var showError: Bool =  false
+    @State var errorMessage: String = ""
+
     var body: some View {
         ZStack {
             Circle()
@@ -42,16 +44,14 @@ struct LoginView: View {
                         .textContentType(.password)
                         .border(1, .gray.opacity(0.5))
                     
-                    Button{
-                        
-                    } label: {
+                    Button(action: loginUser){
                         Text("sign in")
                             .foregroundColor(.white)
                             .hAlign(.center)
                             .fillView(.black)
                     }.padding(.top, 10)
                     
-                    Button("reset password?", action: {})
+                    Button("reset password?", action: resetPassword)
                         .font(.callout)
                         .fontWeight(.medium)
                         .tint(.black)
@@ -84,7 +84,35 @@ struct LoginView: View {
             RegisterView()
                 .transition(.move(edge: .leading))
         }
+        .alert(errorMessage, isPresented: $showError, actions: {})
 
+    }
+    
+    func loginUser(){
+        Task{
+            do{
+                try await Auth.auth().signIn(withEmail: emailID, password: password)
+            }catch{
+                await setError(error)
+            }
+        }
+    }
+    
+    func resetPassword(){
+        Task{
+            do{
+                try await Auth.auth().sendPasswordReset(withEmail: emailID)
+            }catch{
+                await setError(error)
+            }
+        }
+    }
+    
+    func setError(_ error: Error)async{
+        await MainActor.run(body:{
+            errorMessage = error.localizedDescription
+            showError.toggle()
+        })
     }
 }
 
@@ -94,6 +122,11 @@ struct LoginView: View {
 
 // MARK: View Extensions for UI Building
 extension View{
+    
+    func disableWithOpacity(_ condition: Bool)->some View{
+        self.disabled(condition)
+            .opacity(condition ? 0.6 : 1)
+    }
     func hAlign(_ alignment: Alignment)->some View{
         self.frame(maxWidth: .infinity, alignment: alignment)
     }
