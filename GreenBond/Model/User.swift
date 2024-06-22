@@ -1,4 +1,4 @@
-//  ContentView.swift
+//  User.swift
 //  GreenBond
 //  Created by FERREIRA Kévin on 21/6/2024.
 //  Modified by FERREIRA Kévin on 21/6/2024.
@@ -11,6 +11,7 @@ struct User: Identifiable, Codable{
     var userGender: String
     var userName: String
     var userFamilyName: String
+    var userProfileURL: URL
     
     var userCity: String
     var userBirthDate: Date
@@ -29,6 +30,7 @@ struct User: Identifiable, Codable{
         case userGender
         case userName
         case userFamilyName
+        case userProfileURL
         case userCity
         case userBirthDate
         case userEmail

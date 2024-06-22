@@ -1,4 +1,4 @@
-//  ContentView.swift
+//  RegisterView.swift
 //  GreenBond
 //  Created by FERREIRA Kévin on 20/6/2024.
 //  Modified by FERREIRA Kévin on 21/6/2024.
@@ -11,9 +11,6 @@ import FirebaseStorage
 
 struct RegisterView: View {
     
-    let genders = ["Mr", "Ms", "Mx"]
-    let cities = ["Berlin, Germany", "Paris, France"]
-    
     @State var emailID : String = ""
     @State var password: String = ""
     @State var userGender: String = ""
@@ -25,8 +22,16 @@ struct RegisterView: View {
     @State var showImagePicker : Bool = false
     @State var photoItem: PhotosPickerItem?
     
+    @State var isLoading: Bool = false
+    
     @State var showError: Bool =  false
     @State var errorMessage: String = ""
+    
+    @AppStorage("log_status") var logStatus: Bool = false
+    @AppStorage("user_profile_url") var profileURL: URL?
+    @AppStorage("user_given_name") var userGivenNameStored: String = ""
+    @AppStorage("user_family_name") var userFamilyNameStored: String = ""
+    @AppStorage("user_UID") var userUID: String = ""
     
     @Environment(\.dismiss) var dismiss
     
@@ -34,7 +39,7 @@ struct RegisterView: View {
         ZStack {
 
             Circle()
-                .fill(Color(hex: "105b37"))
+                .fill(Color(AppColors.greenColor))
                 .frame(width: 300, height: 300)
                 .offset(x: 100, y: 300)
                 .zIndex(0)
@@ -67,13 +72,11 @@ struct RegisterView: View {
                     
                     HStack{
                         Picker("gender", selection: $userGender){
-                            ForEach(genders, id: \.self) {
+                            ForEach(AppConstants.Lists.genders, id: \.self) {
                                 Text($0)
                             }
                         }
-                        //.hAlign(.leading)
                         .tint(.black)
-                        //.border(1, .gray.opacity(0.5))
                         
                         TextField("given name", text: $userGivenName)
                             .textContentType(.givenName)
@@ -98,7 +101,7 @@ struct RegisterView: View {
                         .border(1, .gray.opacity(0.5))
                     
                     Picker("city", selection: $userCity){
-                        ForEach(cities, id: \.self) {
+                        ForEach(AppConstants.Lists.cities, id: \.self) {
                             Text($0)
                         }
                     }
@@ -135,6 +138,9 @@ struct RegisterView: View {
             .vAlign(.top)
             .padding(20)
             .zIndex(1)
+            .overlay(content: {
+                LoadingView(show: $isLoading)
+            })
             .photosPicker(isPresented:$showImagePicker, selection: $photoItem)
             .onChange(of: photoItem){
                 if let photoItem{
@@ -152,9 +158,9 @@ struct RegisterView: View {
             
         }
         .onAppear {
-                    userGender = genders[0]
-                    userCity = cities[0]
-                }
+            userGender = AppConstants.Lists.genders[0]
+            userCity = AppConstants.Lists.cities[0]
+        }
         .alert(errorMessage, isPresented: $showError, actions: {})
         
     }
@@ -173,6 +179,8 @@ struct RegisterView: View {
     }
     
     func registerUser(){
+        isLoading = true
+        closeKeyboard()
         Task{
             do{
                 try await Auth.auth().createUser(withEmail: emailID, password: password)
@@ -184,11 +192,16 @@ struct RegisterView: View {
                 let _ = try await storageRef.putDataAsync(imageData)
                 let dowloadURL = try await storageRef.downloadURL()
                 
-                let user = User(userGender: userGender, userName: userGivenName, userFamilyName: userFamilyName, userCity: userCity, userBirthDate: userBirthDate, userEmail: emailID, userRegisterDate: Date(), userDatePremium: Date(), userUID: userUID, userProgress: 0)
+                let user = User(userGender: userGender, userName: userGivenName, userFamilyName: userFamilyName, userProfileURL: dowloadURL, userCity: userCity, userBirthDate: userBirthDate, userEmail: emailID, userRegisterDate: Date(), userDatePremium: Date(), userUID: userUID, userProgress: 0)
                 
                 let _ = try Firestore.firestore().collection("Users").document(userUID).setData(from: user, completion:{
                     error in
                     if error == nil{
+                        userGivenNameStored = userGivenName
+                        userFamilyNameStored = userFamilyName
+                        self.userUID = userUID
+                        profileURL = dowloadURL
+                        logStatus = true
                     }
                 })
                 
@@ -203,6 +216,7 @@ struct RegisterView: View {
         await MainActor.run(body:{
             errorMessage = error.localizedDescription
             showError.toggle()
+            isLoading = false
         })
     }
     

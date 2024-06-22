@@ -1,10 +1,13 @@
-//  ContentView.swift
+//  LoginView.swift
 //  GreenBond
 //  Created by FERREIRA Kévin on 20/6/2024.
 //  Modified by FERREIRA Kévin on 21/6/2024.
 
 import SwiftUI
+import PhotosUI
 import Firebase
+import FirebaseFirestore
+import FirebaseStorage
 
 struct LoginView: View {
     
@@ -14,17 +17,24 @@ struct LoginView: View {
     @State var createAccount: Bool = false
     @State var showError: Bool =  false
     @State var errorMessage: String = ""
+    @State var isLoading: Bool = false
+    
+    @AppStorage("log_status") var logStatus: Bool = false
+    @AppStorage("user_given_name") var userGivenNameStored: String = ""
+    @AppStorage("user_family_name") var userFamilyNameStored: String = ""
+    @AppStorage("user_UID") var userUID: String = ""
+    @AppStorage("user_profile_url") var profileURL: URL?
 
     var body: some View {
         ZStack {
             Circle()
-                .fill(Color(hex: "105b37"))
+                .fill(Color(AppColors.greenColor))
                 .frame(width: 300, height: 300)
                 .offset(x: 150, y: -400)
                 .zIndex(0)
             
             Circle()
-                .fill(Color(hex: "105b37"))
+                .fill(Color(AppColors.greenColor))
                 .frame(width: 400, height: 400)
                 .offset(x: -20, y: 300)
                 .zIndex(0)
@@ -79,7 +89,10 @@ struct LoginView: View {
             .padding(.top, 100)
             .zIndex(1)
             
-        }                
+        }          
+        .overlay(content: {
+            LoadingView(show: $isLoading)
+        })
         .fullScreenCover(isPresented: $createAccount){
             RegisterView()
                 .transition(.move(edge: .leading))
@@ -89,13 +102,29 @@ struct LoginView: View {
     }
     
     func loginUser(){
+        isLoading = true
+        closeKeyboard()
         Task{
             do{
                 try await Auth.auth().signIn(withEmail: emailID, password: password)
+                try await fetchUser()
             }catch{
                 await setError(error)
             }
         }
+    }
+    
+    func fetchUser()async throws{
+        guard let userID = Auth.auth().currentUser?.uid else{return}
+        let user = try await Firestore.firestore().collection("Users").document(userID).getDocument(as: User.self)
+        await MainActor.run(body: {
+            logStatus = true
+            userGivenNameStored = user.userName
+            userFamilyNameStored = user.userFamilyName
+            userUID = userID
+            profileURL = user.userProfileURL
+
+        })
     }
     
     func resetPassword(){
@@ -112,61 +141,11 @@ struct LoginView: View {
         await MainActor.run(body:{
             errorMessage = error.localizedDescription
             showError.toggle()
+            isLoading = false
         })
     }
 }
 
 #Preview {
     LoginView()
-}
-
-// MARK: View Extensions for UI Building
-extension View{
-    
-    func disableWithOpacity(_ condition: Bool)->some View{
-        self.disabled(condition)
-            .opacity(condition ? 0.6 : 1)
-    }
-    func hAlign(_ alignment: Alignment)->some View{
-        self.frame(maxWidth: .infinity, alignment: alignment)
-    }
-    
-    func vAlign(_ alignment: Alignment)->some View{
-        self.frame(maxHeight: .infinity, alignment: alignment)
-    }
-    
-    func border(_ width: CGFloat, _ color: Color)->some View{
-        self.padding(.horizontal, 15)
-            .padding(.vertical, 15)
-            .background{
-                RoundedRectangle(cornerRadius: 5, style:.continuous)
-                    .stroke(color, lineWidth: width)
-            }
-    }
-    
-    func fillView(_ color: Color)->some View{
-        self.padding(.horizontal, 15)
-            .padding(.vertical, 15)
-            .background{
-                RoundedRectangle(cornerRadius: 5, style:.continuous)
-                    .fill(color)
-            }
-    }
-}
-
-extension Color {
-    init(hex: String) {
-        var cleanHexCode = hex.trimmingCharacters(in: .whitespacesAndNewlines)
-        cleanHexCode = cleanHexCode.replacingOccurrences(of: "#", with: "")
-        print(cleanHexCode)
-        var rgb: UInt64 = 0
-        
-        Scanner(string: cleanHexCode).scanHexInt64(&rgb)
-        
-        let redValue = Double((rgb >> 16) & 0xFF) / 255.0
-        let greenValue = Double((rgb >> 8) & 0xFF) / 255.0
-        let blueValue = Double(rgb & 0xFF) / 255.0
-        self.init(red: redValue, green: greenValue, blue: blueValue)
-    }
-      
 }
