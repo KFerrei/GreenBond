@@ -7,27 +7,23 @@ import SwiftUI
 import SDWebImageSwiftUI
 
 struct ProfileContent: View {
-    //var user: User
+    var user: User
     
     @State private var loadFailed: Bool = false
     
     var body: some View {
-        ScrollView(.vertical, showsIndicators: false){
-            LazyVStack{
-                VStack(spacing: 12){
-                    Image(systemName: "person.circle")
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(width: 100, height: 100)
-                        .clipShape(Circle())
-                        .padding(.top, 30)
+        LazyVStack{
+            VStack(spacing: 12){
+                ZStack{
+                    Circle()
+                        .frame(width: 150, height: 150)
+                        .foregroundColor(.white)
                     
-                    /*
                     if loadFailed {
-                        Image(systemName: "photo")
+                        Image(systemName: "person")
                             .resizable()
                             .aspectRatio(contentMode: .fill)
-                            .frame(width: 100, height: 100)
+                            .frame(width: 150, height: 150)
                             .clipShape(Circle())
                     } else {
                         WebImage(url: user.userProfileURL)
@@ -39,39 +35,39 @@ struct ProfileContent: View {
                             }
                             .resizable()
                             .aspectRatio(contentMode: .fill)
-                            .frame(width: 100, height: 100)
+                            .frame(width: 150, height: 150)
                             .clipShape(Circle())
-                    }*/
-                    HStack{
-                        Text("Ferreira")
-                            .font(.system(size: 30).bold())
-                        Text("Kévin")
-                            .font(.system(size: 30))
                     }
                     
-                    Text("Berlin, Germany")
-                        .font(.system(size: 20).bold())
-                    
-                    /*
-                     case id
-                     case userGender
-                     case userCity
-                     case userBirthDate
-                     case userEmail
-                     case userRegisterDate
-                     case userDatePremium
-                     case userUID
-                     case userProgress
-                     */
-                    
                 }
+                
+                
+                HStack{
+                    Text(user.userFamilyName)
+                        .font(.system(size: 40).bold())
+                    Text(user.userGivenName)
+                        .font(.system(size: 40))
+                }
+                HStack{
+                    
+                    Text("@" + user.userName)
+                        .font(.system(size: 20))
+                    if Date() < user.userDatePremium{
+                        Image(systemName: "crown.fill")
+                            .foregroundColor(AppColors.greenColor)
+                    }
+                }
+                Text(user.userCity)
+                    .font(.system(size: 20))
+                
+                BarGraphBuilder(dataPoints: user.userProgress)
+                
             }
-            
         }
     }
 }
 
 #Preview {
-    ProfileContent()
+    MainView()
 }
 

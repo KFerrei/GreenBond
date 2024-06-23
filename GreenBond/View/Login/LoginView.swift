@@ -20,29 +20,33 @@ struct LoginView: View {
     @State var isLoading: Bool = false
     
     @AppStorage("log_status") var logStatus: Bool = false
-    @AppStorage("user_given_name") var userGivenNameStored: String = ""
-    @AppStorage("user_family_name") var userFamilyNameStored: String = ""
+    @AppStorage("user_name") var userNameStored: String = ""
     @AppStorage("user_UID") var userUID: String = ""
     @AppStorage("user_profile_url") var profileURL: URL?
 
     var body: some View {
         ZStack {
-            Circle()
-                .fill(Color(AppColors.greenColor))
-                .frame(width: 300, height: 300)
-                .offset(x: 150, y: -400)
+            
+            WaveShape(points: WaveShapePoint.points_Down1)
+                .fill(AppColors.greenColor)
+                .frame(width: 100, height: 100)
+                .scaleEffect(x: 1.3, y: 1.3)
+                .offset(x: -150, y: 150)
                 .zIndex(0)
             
-            Circle()
-                .fill(Color(AppColors.greenColor))
-                .frame(width: 400, height: 400)
-                .offset(x: -20, y: 300)
+            WaveShape(points: WaveShapePoint.points_Up1)
+                .fill(AppColors.greenColor)
+                .frame(width: 100, height: 100)
+                .scaleEffect(x: 1, y: 1.2)
+                .offset(x: -250, y: -400)
                 .zIndex(0)
+            
             
             VStack(spacing: 10){
                 Text("green bond")
                     .font(.system(size: 50).bold())
                     .hAlign(.center)
+                    .padding(.top,25)
                 
                 VStack(spacing: 10){
                     TextField("email", text: $emailID)
@@ -70,14 +74,14 @@ struct LoginView: View {
                 }
                 
                 HStack{
-                    Text("don't have an account yet?")
+                    Text("don't have an account yet?").foregroundColor(.white)
                     
                     Button("register now"){
                         createAccount.toggle()
                         
                     }
                     .fontWeight(.bold)
-                    .foregroundColor(.black)
+                    .foregroundColor(.white)
                     
                 }
                 .hAlign(.center)
@@ -119,8 +123,7 @@ struct LoginView: View {
         let user = try await Firestore.firestore().collection("Users").document(userID).getDocument(as: User.self)
         await MainActor.run(body: {
             logStatus = true
-            userGivenNameStored = user.userName
-            userFamilyNameStored = user.userFamilyName
+            userNameStored = user.userName
             userUID = userID
             profileURL = user.userProfileURL
 

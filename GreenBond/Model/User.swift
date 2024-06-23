@@ -9,8 +9,9 @@ import FirebaseFirestoreSwift
 struct User: Identifiable, Codable{
     @DocumentID var id: String?
     var userGender: String
-    var userName: String
+    var userGivenName: String
     var userFamilyName: String
+    var userName: String
     var userProfileURL: URL
     
     var userCity: String
@@ -23,13 +24,15 @@ struct User: Identifiable, Codable{
     
     var userUID: String
     
-    var userProgress: Int
+    var userProgress: [Float]
+    var isAdmin: Bool
     
     enum CodingKeys: CodingKey{
         case id
         case userGender
-        case userName
+        case userGivenName
         case userFamilyName
+        case userName
         case userProfileURL
         case userCity
         case userBirthDate
@@ -38,6 +41,7 @@ struct User: Identifiable, Codable{
         case userDatePremium
         case userUID
         case userProgress
+        case isAdmin
     }
     
 }

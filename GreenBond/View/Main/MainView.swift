@@ -6,31 +6,29 @@
 import SwiftUI
 
 struct MainView: View {
-    @State private var selection = 1
+    @State private var selectedTab = Tabs.learn
 
     var body: some View {
-        TabView(selection:$selection){
-            Text("learn")
-                .tabItem{
-                    Text("learn")
-                }.tag(1)
+        ZStack{
+            switch selectedTab {
+            case .learn:
+                Text("learn")
+            case .bond:
+                Text("bond")
+            case .engage:
+                Text("engage")
+            case .profile:
+                ProfileView()
+            }
             
-            Text("bond")
-                .tabItem{
-                    Text("bond")
-                }.tag(2)
-            
-            Text("engage")
-                .tabItem{
-                    Text("engage")
-                }.tag(3)
-            
-            ProfileView()
-                .tabItem{
-                    Text("profil")
-                }.tag(4)
+            VStack {
+                CustomTabBar(selectedTab: $selectedTab)
+            }
+            .padding(.bottom, -5)
+            .vAlign(.bottom)
+            .ignoresSafeArea(edges: .bottom)
+        
         }
-        .accentColor(AppColors.greenColor)
     }
 }
 

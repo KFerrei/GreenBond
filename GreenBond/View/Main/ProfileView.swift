@@ -18,31 +18,42 @@ struct ProfileView: View {
     
     var body: some View {
         NavigationStack{
-            ScrollView(.vertical, showsIndicators: false){
-                if let myProfile{
-                    ProfileContent()
-                    //ProfileContent(user: myProfile)
-                        .refreshable {
-                            self.myProfile = nil
-                            await fetchUserData()
+            VStack{
+                ZStack{
+                    
+                    WaveShape(points: WaveShapePoint.points_Up2)
+                        .fill(AppColors.greenColor)
+                        .hAlign(.center)
+                        .scaleEffect(x: 1, y: 1)
+                        .offset(x: 0, y: -100)
+                        .zIndex(0)
+                
+                    VStack{
+                        if let myProfile{
+                            ProfileContent(user: myProfile)
+                                .refreshable {
+                                    self.myProfile = nil
+                                    await fetchUserData()
+                                }
+                        } else{
+                            ProgressView()
                         }
-                } else{
-                    ProgressView()
+                    }.padding(.top, -200)
                 }
             }
-            .navigationTitle("my profile")
             .toolbar{
                 ToolbarItem(placement: .navigationBarTrailing){
                     Menu {
                         Button("log out", action: logOutUser)
+                        Button("modify profile", action: {})
                         
-                        Button("deleta account", role: .destructive, action: deleteAccount)
+                        Button("delete account", role: .destructive, action: deleteAccount)
                         
                     } label: {
                         Image(systemName: "ellipsis")
                             .rotationEffect(.init(degrees: 90))
-                            .tint(.black)
-                            .scaleEffect(0.8)
+                            .tint(.white)
+                            .scaleEffect(1)
                     }
                 }
             }

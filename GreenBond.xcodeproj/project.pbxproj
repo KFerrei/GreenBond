@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5787DAD32C28610C005A4686 /* WaveShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5787DAD22C28610B005A4686 /* WaveShape.swift */; };
+		5787DAD52C286D53005A4686 /* CustomTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5787DAD42C286D53005A4686 /* CustomTabBar.swift */; };
+		5787DAD82C287C53005A4686 /* BarGraphBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5787DAD72C287C53005A4686 /* BarGraphBuilder.swift */; };
 		57D590C22C27405A001D614F /* View+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57D590C12C27405A001D614F /* View+Extensions.swift */; };
 		57D590C42C274083001D614F /* Color+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57D590C32C274083001D614F /* Color+Extensions.swift */; };
 		57D590C82C2741E8001D614F /* AppConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57D590C72C2741E8001D614F /* AppConstants.swift */; };
@@ -30,6 +33,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5787DAD22C28610B005A4686 /* WaveShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaveShape.swift; sourceTree = "<group>"; };
+		5787DAD42C286D53005A4686 /* CustomTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBar.swift; sourceTree = "<group>"; };
+		5787DAD72C287C53005A4686 /* BarGraphBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarGraphBuilder.swift; sourceTree = "<group>"; };
 		57D590C12C27405A001D614F /* View+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extensions.swift"; sourceTree = "<group>"; };
 		57D590C32C274083001D614F /* Color+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extensions.swift"; sourceTree = "<group>"; };
 		57D590C72C2741E8001D614F /* AppConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConstants.swift; sourceTree = "<group>"; };
@@ -156,6 +162,9 @@
 				57D590C12C27405A001D614F /* View+Extensions.swift */,
 				57D590C32C274083001D614F /* Color+Extensions.swift */,
 				57D590C72C2741E8001D614F /* AppConstants.swift */,
+				5787DAD22C28610B005A4686 /* WaveShape.swift */,
+				5787DAD42C286D53005A4686 /* CustomTabBar.swift */,
+				5787DAD72C287C53005A4686 /* BarGraphBuilder.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -242,7 +251,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5787DAD32C28610C005A4686 /* WaveShape.swift in Sources */,
 				57E0ECD02C24BF1400BE0FCC /* LoginView.swift in Sources */,
+				5787DAD52C286D53005A4686 /* CustomTabBar.swift in Sources */,
 				57E0ECD22C24CD1C00BE0FCC /* RegisterView.swift in Sources */,
 				57E0ECBC2C24B4DE00BE0FCC /* ContentView.swift in Sources */,
 				57D590D02C275B63001D614F /* ProfileContent.swift in Sources */,
@@ -252,6 +263,7 @@
 				57E0ECDB2C2575E200BE0FCC /* User.swift in Sources */,
 				57E0ECBA2C24B4DE00BE0FCC /* GreenBondApp.swift in Sources */,
 				57F90E952C25DB170016D90F /* LoadingView.swift in Sources */,
+				5787DAD82C287C53005A4686 /* BarGraphBuilder.swift in Sources */,
 				57D590CE2C27520F001D614F /* ProfileView.swift in Sources */,
 				57D590C82C2741E8001D614F /* AppConstants.swift in Sources */,
 			);
