@@ -32,6 +32,8 @@ struct RegisterView: View {
     @AppStorage("user_profile_url") var profileURL: URL?
     @AppStorage("user_name") var userNameStored: String = ""
     @AppStorage("user_UID") var userUID: String = ""
+    @AppStorage("is_Premium") var isPremium: Bool = false
+    @AppStorage("is_Admin") var isAdmin: Bool = false
     
     @Environment(\.dismiss) var dismiss
     
@@ -208,7 +210,7 @@ struct RegisterView: View {
                 let currentDate = Date()
                 let userDatePremium = Calendar.current.date(byAdding: .month, value: 1, to: currentDate)
                 
-                let user = User(userGender: userGender, userGivenName: userGivenName, userFamilyName: userFamilyName, userName: userName, userProfileURL: dowloadURL, userCity: userCity, userBirthDate: userBirthDate, userEmail: emailID, userRegisterDate: Date(), userDatePremium:  userDatePremium!, userUID: userUID, userProgress: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], isAdmin: false)
+                let user = User(userGender: userGender, userGivenName: userGivenName, userFamilyName: userFamilyName, userName: userName, userProfileURL: dowloadURL, userCity: userCity, userBirthDate: userBirthDate, userEmail: emailID, userRegisterDate: Date(), userDatePremium:  userDatePremium!, userUID: userUID)
                 
                 let _ = try Firestore.firestore().collection("Users").document(userUID).setData(from: user, completion:{
                     error in
@@ -217,6 +219,7 @@ struct RegisterView: View {
                         self.userUID = userUID
                         profileURL = dowloadURL
                         logStatus = true
+                        isPremium = true
                     }
                 })
                 

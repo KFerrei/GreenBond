@@ -10,11 +10,17 @@ import FirebaseStorage
 
 struct ProfileView: View {
     @State private var myProfile: User?
-    @AppStorage("log_status") var logStatus: Bool = false
     
     @State var showError: Bool =  false
     @State var errorMessage: String = ""
     @State var isLoading: Bool = false
+    
+    @AppStorage("log_status") var logStatus: Bool = true
+    @AppStorage("user_profile_url") var profileURL: URL?
+    @AppStorage("user_name") var userNameStored: String = ""
+    @AppStorage("user_UID") var registerUserUID: String = ""
+    @AppStorage("is_Premium") var isPremium: Bool = false
+    @AppStorage("is_Admin") var isAdmin: Bool = false
     
     var body: some View {
         NavigationStack{
@@ -25,7 +31,7 @@ struct ProfileView: View {
                         .fill(AppColors.greenColor)
                         .hAlign(.center)
                         .scaleEffect(x: 1, y: 1)
-                        .offset(x: 0, y: -100)
+                        .offset(x: -5, y: -100)
                         .zIndex(0)
                 
                     VStack{
@@ -38,7 +44,7 @@ struct ProfileView: View {
                         } else{
                             ProgressView()
                         }
-                    }.padding(.top, -200)
+                    }.padding(.top, -100)
                 }
             }
             .toolbar{
@@ -73,9 +79,15 @@ struct ProfileView: View {
         guard let user = try? await Firestore.firestore().collection("Users").document(userUID).getDocument(as: User.self) else{return}
         await MainActor.run(body: {
             myProfile = user
+            profileURL = user.userProfileURL
+            userNameStored = user.userName
+            registerUserUID = user.userUID
+            isPremium = (Date() < user.userDatePremium)
+            isAdmin = user.isAdmin
         })
         
     }
+    
     func logOutUser(){
         try? Auth.auth().signOut()
         logStatus = false

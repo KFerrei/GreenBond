@@ -7,6 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		575AEC212C35C08400D73623 /* BondView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 575AEC202C35C08400D73623 /* BondView.swift */; };
+		575AEC232C35C11E00D73623 /* CreateBond.swift in Sources */ = {isa = PBXBuildFile; fileRef = 575AEC222C35C11E00D73623 /* CreateBond.swift */; };
+		575AEC252C35CD6E00D73623 /* BondChallenges.swift in Sources */ = {isa = PBXBuildFile; fileRef = 575AEC242C35CD6E00D73623 /* BondChallenges.swift */; };
+		575AEC272C35E0B200D73623 /* ReusableBondView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 575AEC262C35E0B200D73623 /* ReusableBondView.swift */; };
+		575AEC292C35E25300D73623 /* BondCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 575AEC282C35E25300D73623 /* BondCardView.swift */; };
+		576583032C3453FF00A817FC /* CreateLearn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 576583022C3453FF00A817FC /* CreateLearn.swift */; };
+		576583082C34544900A817FC /* LearnPost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 576583072C34544900A817FC /* LearnPost.swift */; };
+		5765830A2C345FD300A817FC /* LearnView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 576583092C345FD300A817FC /* LearnView.swift */; };
+		5765830E2C34651F00A817FC /* ReusableLearnPostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5765830D2C34651F00A817FC /* ReusableLearnPostView.swift */; };
+		576583102C346EFA00A817FC /* LearnPostCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5765830F2C346EFA00A817FC /* LearnPostCardView.swift */; };
 		5787DAD32C28610C005A4686 /* WaveShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5787DAD22C28610B005A4686 /* WaveShape.swift */; };
 		5787DAD52C286D53005A4686 /* CustomTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5787DAD42C286D53005A4686 /* CustomTabBar.swift */; };
 		5787DAD82C287C53005A4686 /* BarGraphBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5787DAD72C287C53005A4686 /* BarGraphBuilder.swift */; };
@@ -33,6 +43,16 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		575AEC202C35C08400D73623 /* BondView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BondView.swift; sourceTree = "<group>"; };
+		575AEC222C35C11E00D73623 /* CreateBond.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateBond.swift; sourceTree = "<group>"; };
+		575AEC242C35CD6E00D73623 /* BondChallenges.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BondChallenges.swift; sourceTree = "<group>"; };
+		575AEC262C35E0B200D73623 /* ReusableBondView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReusableBondView.swift; sourceTree = "<group>"; };
+		575AEC282C35E25300D73623 /* BondCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BondCardView.swift; sourceTree = "<group>"; };
+		576583022C3453FF00A817FC /* CreateLearn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateLearn.swift; sourceTree = "<group>"; };
+		576583072C34544900A817FC /* LearnPost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LearnPost.swift; sourceTree = "<group>"; };
+		576583092C345FD300A817FC /* LearnView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LearnView.swift; sourceTree = "<group>"; };
+		5765830D2C34651F00A817FC /* ReusableLearnPostView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReusableLearnPostView.swift; sourceTree = "<group>"; };
+		5765830F2C346EFA00A817FC /* LearnPostCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LearnPostCardView.swift; sourceTree = "<group>"; };
 		5787DAD22C28610B005A4686 /* WaveShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaveShape.swift; sourceTree = "<group>"; };
 		5787DAD42C286D53005A4686 /* CustomTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBar.swift; sourceTree = "<group>"; };
 		5787DAD72C287C53005A4686 /* BarGraphBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarGraphBuilder.swift; sourceTree = "<group>"; };
@@ -71,6 +91,51 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		575AEC1F2C35A8EB00D73623 /* ProfileView */ = {
+			isa = PBXGroup;
+			children = (
+				57D590CF2C275B63001D614F /* ProfileContent.swift */,
+				57D590CD2C27520F001D614F /* ProfileView.swift */,
+			);
+			path = ProfileView;
+			sourceTree = "<group>";
+		};
+		576583012C34539500A817FC /* AdminView */ = {
+			isa = PBXGroup;
+			children = (
+				576583022C3453FF00A817FC /* CreateLearn.swift */,
+				575AEC222C35C11E00D73623 /* CreateBond.swift */,
+			);
+			path = AdminView;
+			sourceTree = "<group>";
+		};
+		57690DC02C353D2E0015844B /* LearnView */ = {
+			isa = PBXGroup;
+			children = (
+				576583092C345FD300A817FC /* LearnView.swift */,
+				5765830D2C34651F00A817FC /* ReusableLearnPostView.swift */,
+				5765830F2C346EFA00A817FC /* LearnPostCardView.swift */,
+			);
+			path = LearnView;
+			sourceTree = "<group>";
+		};
+		57690DC12C353D4E0015844B /* BondView */ = {
+			isa = PBXGroup;
+			children = (
+				575AEC202C35C08400D73623 /* BondView.swift */,
+				575AEC262C35E0B200D73623 /* ReusableBondView.swift */,
+				575AEC282C35E25300D73623 /* BondCardView.swift */,
+			);
+			path = BondView;
+			sourceTree = "<group>";
+		};
+		57690DC22C353D560015844B /* EngageView */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = EngageView;
+			sourceTree = "<group>";
+		};
 		57D590BF2C273F6B001D614F /* Login */ = {
 			isa = PBXGroup;
 			children = (
@@ -84,8 +149,6 @@
 			isa = PBXGroup;
 			children = (
 				57D590CB2C274DD6001D614F /* MainView.swift */,
-				57D590CD2C27520F001D614F /* ProfileView.swift */,
-				57D590CF2C275B63001D614F /* ProfileContent.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -134,6 +197,11 @@
 		57E0ECCD2C24BEFD00BE0FCC /* View */ = {
 			isa = PBXGroup;
 			children = (
+				575AEC1F2C35A8EB00D73623 /* ProfileView */,
+				57690DC22C353D560015844B /* EngageView */,
+				57690DC12C353D4E0015844B /* BondView */,
+				57690DC02C353D2E0015844B /* LearnView */,
+				576583012C34539500A817FC /* AdminView */,
 				57D590C02C274032001D614F /* Main */,
 				57D590BF2C273F6B001D614F /* Login */,
 				57F90E942C25DB170016D90F /* LoadingView.swift */,
@@ -145,6 +213,8 @@
 			isa = PBXGroup;
 			children = (
 				57E0ECDA2C2575E200BE0FCC /* User.swift */,
+				576583072C34544900A817FC /* LearnPost.swift */,
+				575AEC242C35CD6E00D73623 /* BondChallenges.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -251,17 +321,27 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				576583082C34544900A817FC /* LearnPost.swift in Sources */,
 				5787DAD32C28610C005A4686 /* WaveShape.swift in Sources */,
 				57E0ECD02C24BF1400BE0FCC /* LoginView.swift in Sources */,
+				576583032C3453FF00A817FC /* CreateLearn.swift in Sources */,
 				5787DAD52C286D53005A4686 /* CustomTabBar.swift in Sources */,
 				57E0ECD22C24CD1C00BE0FCC /* RegisterView.swift in Sources */,
 				57E0ECBC2C24B4DE00BE0FCC /* ContentView.swift in Sources */,
+				5765830A2C345FD300A817FC /* LearnView.swift in Sources */,
+				575AEC252C35CD6E00D73623 /* BondChallenges.swift in Sources */,
+				575AEC232C35C11E00D73623 /* CreateBond.swift in Sources */,
+				5765830E2C34651F00A817FC /* ReusableLearnPostView.swift in Sources */,
+				575AEC292C35E25300D73623 /* BondCardView.swift in Sources */,
 				57D590D02C275B63001D614F /* ProfileContent.swift in Sources */,
 				57D590CC2C274DD6001D614F /* MainView.swift in Sources */,
 				57D590C42C274083001D614F /* Color+Extensions.swift in Sources */,
 				57D590C22C27405A001D614F /* View+Extensions.swift in Sources */,
+				575AEC212C35C08400D73623 /* BondView.swift in Sources */,
 				57E0ECDB2C2575E200BE0FCC /* User.swift in Sources */,
 				57E0ECBA2C24B4DE00BE0FCC /* GreenBondApp.swift in Sources */,
+				575AEC272C35E0B200D73623 /* ReusableBondView.swift in Sources */,
+				576583102C346EFA00A817FC /* LearnPostCardView.swift in Sources */,
 				57F90E952C25DB170016D90F /* LoadingView.swift in Sources */,
 				5787DAD82C287C53005A4686 /* BarGraphBuilder.swift in Sources */,
 				57D590CE2C27520F001D614F /* ProfileView.swift in Sources */,
@@ -406,8 +486,8 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -437,8 +517,8 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

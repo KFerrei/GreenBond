@@ -23,6 +23,8 @@ struct LoginView: View {
     @AppStorage("user_name") var userNameStored: String = ""
     @AppStorage("user_UID") var userUID: String = ""
     @AppStorage("user_profile_url") var profileURL: URL?
+    @AppStorage("is_Premium") var isPremium: Bool = false
+    @AppStorage("is_Admin") var isAdmin: Bool = false
 
     var body: some View {
         ZStack {
@@ -126,6 +128,8 @@ struct LoginView: View {
             userNameStored = user.userName
             userUID = userID
             profileURL = user.userProfileURL
+            isPremium = (Date() < user.userDatePremium)
+            isAdmin = user.isAdmin
 
         })
     }

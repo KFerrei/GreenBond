@@ -21,11 +21,12 @@ struct User: Identifiable, Codable{
     
     var userRegisterDate: Date
     var userDatePremium: Date
+    var userGreenCoins: Int = 0
     
     var userUID: String
     
-    var userProgress: [Float]
-    var isAdmin: Bool
+    var userProgress: [Float] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    var isAdmin: Bool = false
     
     enum CodingKeys: CodingKey{
         case id
@@ -39,6 +40,7 @@ struct User: Identifiable, Codable{
         case userEmail
         case userRegisterDate
         case userDatePremium
+        case userGreenCoins
         case userUID
         case userProgress
         case isAdmin

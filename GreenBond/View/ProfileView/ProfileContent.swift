@@ -56,9 +56,28 @@ struct ProfileContent: View {
                         Image(systemName: "crown.fill")
                             .foregroundColor(AppColors.greenColor)
                     }
+                    
+                    if user.isAdmin{
+                        Text("A")
+                            .bold()
+                            .foregroundColor(AppColors.greenColor)
+                    }
                 }
                 Text(user.userCity)
                     .font(.system(size: 20))
+                
+                HStack{
+                    Text("Green Points")
+                        .font(.title.bold())
+                        
+                    
+                    Spacer()
+                    
+                    Text("\(user.userGreenCoins)")
+                        .font(.title.bold())
+                        
+                }.padding(15)
+                    .hAlign(.leading)
                 
                 BarGraphBuilder(dataPoints: user.userProgress)
                 

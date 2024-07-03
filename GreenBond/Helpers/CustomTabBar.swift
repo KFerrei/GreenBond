@@ -20,16 +20,26 @@ struct CustomTabBar: View {
         ZStack{
             Rectangle()
                 .fill(AppColors.greenColor)
-                .frame(height: 80)
+                .frame(height: 100)
             
             HStack{
                 Button{
                     selectedTab = .learn
                 } label:{
                     if selectedTab == .learn{
-                        Text("LEARN")
+                        VStack{
+                            Image(systemName: "book.circle.fill")
+                                .resizable()
+                                .frame(width: 40, height: 40)
+                            Text("learn")
+                        }
                     } else {
-                        Text("learn")
+                        VStack{
+                            Image(systemName: "book.circle")
+                                .resizable()
+                                .frame(width: 40, height: 40)
+                            Text("learn")
+                        }
                     }
                 }.tint(.white)
                     .padding(25)
@@ -38,9 +48,19 @@ struct CustomTabBar: View {
                     selectedTab = .bond
                 } label:{
                     if selectedTab == .bond{
-                        Text("BOND")
+                        VStack{
+                            Image(systemName: "trophy.circle.fill")
+                                .resizable()
+                                .frame(width: 40, height: 40)
+                            Text("bond")
+                        }
                     } else {
-                        Text("bond")
+                        VStack{
+                            Image(systemName: "trophy.circle")
+                                .resizable()
+                                .frame(width: 40, height: 40)
+                            Text("bond")
+                        }
                     }
                 }.tint(.white)
                     .padding(25)
@@ -49,9 +69,19 @@ struct CustomTabBar: View {
                     selectedTab = .engage
                 } label:{
                     if selectedTab == .engage{
-                        Text("ENGAGE")
+                        VStack{
+                            Image(systemName: "hammer.circle.fill")
+                                .resizable()
+                                .frame(width: 40, height: 40)
+                            Text("engage")
+                        }
                     } else {
-                        Text("engage")
+                        VStack{
+                            Image(systemName: "hammer.circle")
+                                .resizable()
+                                .frame(width: 40, height: 40)
+                            Text("engage")
+                        }
                     }
                 }.tint(.white)
                     .padding(20)
@@ -60,13 +90,19 @@ struct CustomTabBar: View {
                     selectedTab = .profile
                 } label:{
                     if selectedTab == .profile{
-                        Image(systemName: "person.circle")
-                            .resizable()
-                            .frame(width: 40, height: 40)
+                        VStack{
+                            Image(systemName: "person.circle.fill")
+                                .resizable()
+                                .frame(width: 40, height: 40)
+                            Text("profile")
+                        }
                     } else {
-                        Image(systemName: "person.circle")
-                            .resizable()
-                            .frame(width: 30, height: 30)
+                        VStack{
+                            Image(systemName: "person.circle")
+                                .resizable()
+                                .frame(width: 40, height: 40)
+                            Text("profile")
+                        }
                     }
             
                 }
