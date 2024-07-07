@@ -1,48 +1,47 @@
 //
-//  BondChallenges.swift
+//  WorkshopDate.swift
 //  GreenBond
 //
-//  Created by FERREIRA Kévin on 3/7/2024.
+//  Created by FERREIRA Kévin on 7/7/2024.
 //
 
 import SwiftUI
 import FirebaseFirestore
 
-struct BondChallenges: Identifiable, Codable, Equatable, Hashable {
+
+struct WorkshopDate: Identifiable, Codable, Hashable  {
     @DocumentID var id: String?
-    var text: String
-    
-    var month: Int
-    var greenPoints: Int
+    var date: Date
+    var spot: Int
+    var userRegisterUID: [String]
     
     enum CodingKeys: CodingKey {
         case id
-        case text
-        case month
-        case greenPoints
+        case date
+        case spot
+        case userRegisterUID
     }
     
-    init(id: String? = nil, text: String, month: Int, greenPoints: Int, bondUID: String){
+    init(id: String? = nil, date: Date, spot: Int, userRegisterUID: [String]){
         self.id = id
-        self.text = text
-        self.month = month
-        self.greenPoints = greenPoints
+        self.date = date
+        self.spot = spot
+        self.userRegisterUID = userRegisterUID
     }
     
     // Custom init(from:) function that decodes the id property using the Firestore.Decoder
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
+
         _id = try container.decode(DocumentID<String>.self, forKey: .id)
-        text = try container.decode(String.self, forKey: .text)
-        month = try container.decode(Int.self, forKey: .month)
-        greenPoints = try container.decode(Int.self, forKey: .greenPoints)
+        date = try container.decode(Date.self, forKey: .date)
+        spot = try container.decode(Int.self, forKey: .spot)
+        userRegisterUID = try container.decode([String].self, forKey: .userRegisterUID)
     }
     
     // Custom encode function that encodes the DocumentID property using the Firestore.Encoder
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        
-        // Encode the DocumentID property using the Firestore.Encoder
         if let id = id {
             let firestoreEncoder = Firestore.Encoder()
             let something = try firestoreEncoder.encode(["id":id])
@@ -51,11 +50,11 @@ struct BondChallenges: Identifiable, Codable, Equatable, Hashable {
                 try container.encode(mapId, forKey: .id)
             }
         }
-        
-        
-        try container.encode(text, forKey: .text)
-        try container.encode(month, forKey: .month)
-        try container.encode(greenPoints, forKey: .greenPoints)
-    }
 
+        try container.encode(date, forKey: .date)
+        try container.encode(spot, forKey: .spot)
+        try container.encode(userRegisterUID, forKey: .userRegisterUID)
+
+    }
 }
+

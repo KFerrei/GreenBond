@@ -19,7 +19,7 @@ struct LearnView: View {
             Text("LEARN")
                 .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
                 .bold()
-                .foregroundColor(AppColors.greenColor)
+                .foregroundColor(Color("mainColor"))
                 .hAlign(.leading)
                 .padding(.horizontal, 20)
             
@@ -38,7 +38,7 @@ struct LearnView: View {
                         .fontWeight(.semibold)
                         .foregroundColor(.white)
                         .padding(13)
-                        .background(AppColors.greenColor, in: Circle())
+                        .background(Color("mainColor"), in: Circle())
                 }
                 .padding(20)
                 .padding(.bottom, 25)

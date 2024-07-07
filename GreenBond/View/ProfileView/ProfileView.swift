@@ -26,26 +26,22 @@ struct ProfileView: View {
             ZStack{
                 
                 WaveShape(points: WaveShapePoint.points_Up2)
-                    .fill(AppColors.greenColor)
-                    .frame(maxWidth: .infinity, maxHeight: 500)
+                    .fill(Color("mainColor"))
+                    .frame(maxWidth: .infinity, maxHeight: 200)
                     .ignoresSafeArea()
                     .vAlign(.top)
                 
                 VStack{
-                    if let myProfile{
+                    if let myProfile, !isLoading{
                         ProfileContent(user: myProfile)
-                            .padding(.top, 20)
                             .refreshable {
                                 self.myProfile = nil
                                 await fetchUserData(forceRefresh: true)
                             }.onAppear{
-                                //isLoading = false
+                                isLoading = false
                             }
                     } else {
-                        Text("")
-                            .onAppear {
-                                isLoading = true
-                            }
+                        ProgressView()
                     }
                 }
                 
@@ -68,9 +64,6 @@ struct ProfileView: View {
             DeleteAccount(myProfile : $myProfile)
                 .transition(.move(edge: .leading))
         }
-        .overlay(content: {
-            LoadingView(show: $isLoading)
-        })
         .alert(errorMessage, isPresented: $showError, actions: {})
         .task({
             if myProfile != nil{return}
@@ -79,21 +72,21 @@ struct ProfileView: View {
     }
     
     func fetchUserData(forceRefresh: Bool = false) async {
-        let last_fetch = Calendar.current.dateComponents([.day], from: Functions.stringToDate(string: last_fetchingUser) ?? Date(), to: Date())
+        isLoading = true
+        let last_fetch = Calendar.current.dateComponents([.day], from: Functions.stringToDate(string: last_fetchingUser, form: "dd/MM/yy") ?? Date(), to: Date())
         if !need_fetchUser, !forceRefresh, last_fetch.day! < 1, let cachedProfile = loadCachedUser() {
-            print("cache")
             myProfile = cachedProfile
         } else{
             guard let userUID = Auth.auth().currentUser?.uid else{return}
             guard let user = try? await Firestore.firestore().collection("Users").document(userUID).getDocument(as: User.self) else{return}
             await MainActor.run(body: {
-                print("fetch")
                 myProfile = user
                 cacheUser(user)
-                last_fetchingUser = Functions.dateToString(date: Date())
+                last_fetchingUser = Functions.dateToString(date: Date(), form: "dd/MM/yy")
                 need_fetchUser = false
             })
         }
+        isLoading = false
     }
     
     func loadCachedUser() -> User? {

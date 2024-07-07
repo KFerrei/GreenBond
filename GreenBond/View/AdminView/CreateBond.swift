@@ -61,7 +61,7 @@ struct CreateBond: View {
             .padding(.vertical,10)
             .background{
                 Rectangle()
-                    .fill(AppColors.greenColor)
+                    .fill(Color("mainColor"))
                     .ignoresSafeArea()
             }
             
@@ -75,7 +75,7 @@ struct CreateBond: View {
                             Text(month)
                         }
                     }
-                    .tint(AppColors.greenColor)
+                    .tint(Color("mainColor"))
                     .pickerStyle(.automatic)
                     .padding()
                 }
@@ -88,7 +88,7 @@ struct CreateBond: View {
                             Text("\(number)")
                         }
                     }
-                    .tint(AppColors.greenColor)
+                    .tint(Color("mainColor"))
                     .pickerStyle(.automatic)
                     .padding()
                 }

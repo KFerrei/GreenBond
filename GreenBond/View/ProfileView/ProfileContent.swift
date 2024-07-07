@@ -1,7 +1,7 @@
 //  ProfileContent.swift
 //  GreenBond
 //  Created by FERREIRA Kévin on 22/6/2024.
-//  Modified by FERREIRA Kévin on 22/6/2024.
+//  Modified by FERREIRA Kévin on 7/7/2024.
 
 import SwiftUI
 import SDWebImageSwiftUI
@@ -16,6 +16,7 @@ struct ProfileContent: View {
             LazyVStack{
                 VStack(spacing: 12){
                     ZStack{
+
                         Circle()
                             .frame(width: 150, height: 150)
                             .foregroundColor(.white)
@@ -38,46 +39,29 @@ struct ProfileContent: View {
                         }
                         
                     }
-                    
+                    .padding(.top, 20)
                     
                     HStack{
                         Text(user.userFamilyName)
                             .font(.system(size: 40).bold())
                         Text(user.userGivenName)
                             .font(.system(size: 40))
+                        if Date() < user.userDatePremium{Image(systemName: "crown.fill")}
+                        if user.isAdmin{Text("A").bold()}
                     }
-                    HStack{
-                        
-                        Text("@" + user.userName)
-                            .font(.system(size: 20))
-                        if Date() < user.userDatePremium{
-                            Image(systemName: "crown.fill")
-                                .foregroundColor(AppColors.greenColor)
-                        }
-                        
-                        if user.isAdmin{
-                            Text("A")
-                                .bold()
-                                .foregroundColor(AppColors.greenColor)
-                        }
-                    }
+
                     Text(user.userCity)
                         .font(.system(size: 20))
                     
-                    HStack{
-                        Text("Green Points")
-                            .font(.title.bold())
-                        
-                        
-                        Spacer()
-                        
-                        Text("\(user.userGreenCoins)")
-                            .font(.title.bold())
-                        
-                    }.padding(15)
-                        .hAlign(.leading)
+                    Text("\(user.userGreenCoins) green points")
+                        .font(.title)
+                        .padding(10)
+                        .hAlign(.center)
                     
                     BarGraphBuilder(dataPoints: user.userProgress)
+                    
+                    Text("my workshops")
+                        .font(.system(size: 20))
                     
                 }
             }

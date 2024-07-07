@@ -6,12 +6,11 @@
 import SwiftUI
 import FirebaseFirestore
 
-struct User: Identifiable, Codable{
+struct User: Identifiable, Codable, Equatable, Hashable{
     @DocumentID var id: String?
     var userGender: String
     var userGivenName: String
     var userFamilyName: String
-    var userName: String
     var userProfileURL: URL
     var userCity: String
     var userBirthDate: Date
@@ -23,12 +22,12 @@ struct User: Identifiable, Codable{
     var userProgress: [Float]
     var isAdmin: Bool
     
+    
     enum CodingKeys: CodingKey{
         case id
         case userGender
         case userGivenName
         case userFamilyName
-        case userName
         case userProfileURL
         case userCity
         case userBirthDate
@@ -39,14 +38,14 @@ struct User: Identifiable, Codable{
         case userUID
         case userProgress
         case isAdmin
+        
     }
     
-    init(id: String? = nil, userGender: String, userGivenName: String, userFamilyName: String, userName: String, userProfileURL: URL, userCity: String, userBirthDate: Date, userEmail: String, userRegisterDate: Date = Date(), userDatePremium: Date = Calendar.current.date(byAdding: .month, value: 1, to: Date())!, userGreenCoins: Int = 0, userUID: String, userProgress: [Float] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], isAdmin: Bool = false){
+    init(id: String? = nil, userGender: String, userGivenName: String, userFamilyName: String, userProfileURL: URL, userCity: String, userBirthDate: Date, userEmail: String, userRegisterDate: Date = Date(), userDatePremium: Date = Calendar.current.date(byAdding: .month, value: 1, to: Date())!, userGreenCoins: Int = 0, userUID: String, userProgress: [Float] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], isAdmin: Bool = false){
         self.id = id
         self.userGender = userGender
         self.userGivenName = userGivenName
         self.userFamilyName = userFamilyName
-        self.userName = userName
         self.userProfileURL = userProfileURL
         self.userCity = userCity
         self.userBirthDate = userBirthDate
@@ -62,11 +61,11 @@ struct User: Identifiable, Codable{
     // Custom init(from:) function that decodes the id property using the Firestore.Decoder
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        id = try container.decode(DocumentID<String>.self, forKey: .id).wrappedValue
+
+        _id = try container.decode(DocumentID<String>.self, forKey: .id)
         userGender = try container.decode(String.self, forKey: .userGender)
         userGivenName = try container.decode(String.self, forKey: .userGivenName)
         userFamilyName = try container.decode(String.self, forKey: .userFamilyName)
-        userName = try container.decode(String.self, forKey: .userName)
         userProfileURL = try container.decode(URL.self, forKey: .userProfileURL)
         userCity = try container.decode(String.self, forKey: .userCity)
         userBirthDate = try container.decode(Date.self, forKey: .userBirthDate)
@@ -82,7 +81,6 @@ struct User: Identifiable, Codable{
     // Custom encode function that encodes the DocumentID property using the Firestore.Encoder
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-
         if let id = id {
             let firestoreEncoder = Firestore.Encoder()
             let something = try firestoreEncoder.encode(["id":id])
@@ -95,7 +93,6 @@ struct User: Identifiable, Codable{
         try container.encode(userGender, forKey: .userGender)
         try container.encode(userGivenName, forKey: .userGivenName)
         try container.encode(userFamilyName, forKey: .userFamilyName)
-        try container.encode(userName, forKey: .userName)
         try container.encode(userProfileURL, forKey: .userProfileURL)
         try container.encode(userCity, forKey: .userCity)
         try container.encode(userBirthDate, forKey: .userBirthDate)

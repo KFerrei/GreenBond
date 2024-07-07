@@ -74,8 +74,3 @@ struct WaveShapePoint {
 
 }
 
-#Preview {
-    WaveShape(points: WaveShapePoint.points_Down2)
-        .fill(AppColors.greenColor)
-        .frame(width: 300, height: 300)
-}

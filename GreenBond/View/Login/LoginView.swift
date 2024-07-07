@@ -1,7 +1,7 @@
 //  LoginView.swift
 //  GreenBond
 //  Created by FERREIRA Kévin on 20/6/2024.
-//  Modified by FERREIRA Kévin on 21/6/2024.
+//  Modified by FERREIRA Kévin on 7/7/2024.
 
 import SwiftUI
 import PhotosUI
@@ -27,32 +27,31 @@ struct LoginView: View {
         ZStack {
             VStack{
                 WaveShape(points: WaveShapePoint.points_Up1)
-                    .fill(AppColors.greenColor)
-                    .frame(maxWidth: .infinity, maxHeight: 300)
+                    .fill(Color("mainColor"))
+                    .frame(maxWidth: .infinity, maxHeight: 250)
 
                 Spacer()
                 
                 WaveShape(points: WaveShapePoint.points_Down1)
-                    .fill(AppColors.greenColor)
+                    .fill(Color("mainColor"))
                     .frame(maxWidth: .infinity, maxHeight: 300)
 
             }
-            .zIndex(0)
-            .vAlign(.center)
             .ignoresSafeArea()
             
             
             VStack(spacing: 10){
+                
                 Text("green bond")
                     .font(.system(size: 50).bold())
                     .hAlign(.center)
-                    .padding(.top,25)
+                    .padding(.top,20)
                 
                 VStack(spacing: 10){
                     TextField("email", text: $emailID)
                         .textContentType(.emailAddress)
                         .border(1, .gray.opacity(0.5))
-                        .padding(.top,25)
+                        .padding(.top,20)
                     
                     SecureField("password", text: $password)
                         .textContentType(.password)
@@ -66,15 +65,14 @@ struct LoginView: View {
                     }.padding(.top, 10)
                     
                     Button("reset password?", action: resetPassword)
-                        .font(.callout)
                         .fontWeight(.medium)
                         .tint(.black)
                         .hAlign(.trailing)
-                    
+
                 }
                 
                 HStack{
-                    Text("don't have an account yet?").foregroundColor(.white)
+                    Text("don't have an account?").foregroundColor(.white)
                     
                     Button("register now"){
                         createAccount.toggle()
@@ -95,7 +93,14 @@ struct LoginView: View {
             
         }          
         .overlay(content: {
-            LoadingView(show: $isLoading)
+            if isLoading{
+                ZStack{
+                    Rectangle()
+                        .fill(.white)
+                    LoadingView(show: $isLoading)
+                }
+                .ignoresSafeArea()
+            }
         })
         .fullScreenCover(isPresented: $createAccount){
             RegisterView()
@@ -122,9 +127,11 @@ struct LoginView: View {
         guard let userID = Auth.auth().currentUser?.uid else{return}
         let user = try await Firestore.firestore().collection("Users").document(userID).getDocument(as: User.self)
         await MainActor.run(body: {
-            logStatus = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 4.0) {
+                logStatus = true
+            }
             cacheUser(user)
-            last_fetchingUser = Functions.dateToString(date: Date())
+            last_fetchingUser = Functions.dateToString(date: Date(), form: "dd/MM/yy")
             need_fetchUser = false
         })
     }
@@ -150,6 +157,7 @@ struct LoginView: View {
             errorMessage = error.localizedDescription
             showError.toggle()
             isLoading = false
+            
         })
     }
 }

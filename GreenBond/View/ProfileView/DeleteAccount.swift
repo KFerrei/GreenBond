@@ -26,23 +26,22 @@ struct DeleteAccount: View {
     
     var body: some View {
         ZStack {
-            WaveShape(points: WaveShapePoint.points_Down1)
-                .fill(AppColors.greenColor)
-                .frame(width: 100, height: 100)
-                .scaleEffect(x: 1.3, y: 1.3)
-                .offset(x: -150, y: 150)
-                .zIndex(0)
             
-            WaveShape(points: WaveShapePoint.points_Up1)
-                .fill(AppColors.greenColor)
-                .frame(width: 100, height: 100)
-                .scaleEffect(x: 1, y: 1.2)
-                .offset(x: -250, y: -400)
-                .zIndex(0)
+            VStack{
+                WaveShape(points: WaveShapePoint.points_Up1)
+                    .fill(Color("mainColor"))
+                    .frame(maxWidth: .infinity, maxHeight: 250)
+
+                Spacer()
+                
+                WaveShape(points: WaveShapePoint.points_Down1)
+                    .fill(Color("mainColor"))
+                    .frame(maxWidth: .infinity, maxHeight: 300)
+
+            }
+            .ignoresSafeArea()
             
             VStack(spacing: 10){
-                
-                
                 
                 Text("We are sad")
                     .font(.system(size: 50).bold())
@@ -106,14 +105,13 @@ struct DeleteAccount: View {
                 let userDocRef = db.collection("Users").document(userUID)
                 
                 // Step 1: First Deleting Profile Image From Storage
-                let reference = Storage.storage().reference().child("Profile_Images").child(userUID)
+                let reference = Storage.storage().reference().child("ProfileImages").child(userUID)
                 try await reference.delete()
                 
                 let commentsQuery = db.collection("Comments").whereField("userID", isEqualTo: userUID)
                 let commentDocs = try await commentsQuery.getDocuments()
                 for document in commentDocs.documents {
                     if let imageID = document.get("commentImageID") as? String, imageID != ""{
-                        print("deleting image")
                         let reference = Storage.storage().reference().child("ChallengeImages").child(imageID)
                         try await reference.delete()
                     }
@@ -126,16 +124,13 @@ struct DeleteAccount: View {
                 try await batch.commit()
                 try await Auth.auth().currentUser?.delete()
                 logStatus = false
-                
                 dismiss()
-                
             }catch{
                 await setError(error)
             }
             
         }
     }
-    
     func setError(_ error: Error)async{
         await MainActor.run(body:{
             errorMessage = error.localizedDescription

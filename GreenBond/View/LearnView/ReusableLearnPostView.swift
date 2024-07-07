@@ -22,11 +22,11 @@ struct ReusableLearnPostView: View {
                 
                 if isFetching{
                     ProgressView()
-                        .padding(.top, 30)
                 }else{
                     if learnPosts.isEmpty{
-                        Text("No Post's Found")
-                            .font(.caption)
+                        
+                        Text("No Posts Found")
+                            .font(.headline)
                             .foregroundColor(.gray)
                             .padding(.top, 30)
                     }else{

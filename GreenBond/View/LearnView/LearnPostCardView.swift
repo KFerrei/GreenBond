@@ -20,23 +20,25 @@ struct LearnPostCardView: View {
     
     var body: some View {
         
-        VStack(alignment: .leading, spacing: 6){
-            Text(post.text)
-                //.foregroundColor(AppColors.greenColor)
+        VStack(alignment: .center){
+            VStack{
+                Text(post.text)
+                    .multilineTextAlignment(.center)
+            }
+            .hAlign(.center)
+            .borderFillView(3, Color("mainColor"), .white)
                 
             HStack{
                 if (myProfile!.isAdmin){
                     Button(role:.destructive, action: deletePost, label: {Image(systemName: "trash")
-                            .foregroundColor(AppColors.greenColor)
+                            .foregroundColor(Color("mainColor"))
                     })
                 }
                 Spacer()
                 PostInteraction()
             }
-            .hAlign(.trailing)
         }
         .hAlign(.center)
-        .border(3, AppColors.greenColor)
         .padding(.horizontal, 20)
         .onAppear{
             if docListener == nil{
@@ -75,7 +77,7 @@ struct LearnPostCardView: View {
             }
         
         }
-        .foregroundColor(AppColors.greenColor)
+        .foregroundColor(Color("mainColor"))
     }
     
     func likePost(){

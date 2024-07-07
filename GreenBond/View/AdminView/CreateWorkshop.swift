@@ -17,14 +17,12 @@ struct CreateWorkshop: View {
     @State private var organizer: String = ""
     @State private var adress: String = ""
     @State private var city: String = ""
-    @State private var price: Float = 0
+    @State private var price: Double = 0
     @State private var theme1: String = ""
     @State private var theme2: String = ""
-    @State private var dates: [Date] = []
-    @State private var spots: [Int] = []
+    @State private var workshopDates: [WorkshopDate] = []
     @State private var newDate: Date = Date()
     @State private var newSpot: Int = 0
-    @State private var userUIDs: [[String]] = [[]]
     
     @Environment(\.dismiss) private var dismiss
     @State private var isLoading: Bool = false
@@ -60,7 +58,7 @@ struct CreateWorkshop: View {
                 Spacer()
                 
                 Button("Done"){
-                    //showKeyboard = false
+                    showKeyboard = false
                 }
                 .foregroundColor(.white)
                 
@@ -70,7 +68,7 @@ struct CreateWorkshop: View {
             .padding(.vertical,10)
             .background{
                 Rectangle()
-                    .fill(AppColors.greenColor)
+                    .fill(Color("mainColor"))
                     .ignoresSafeArea()
             }
             
@@ -90,7 +88,7 @@ struct CreateWorkshop: View {
                                     Image(systemName: "photo")
                                         .resizable()
                                         .aspectRatio(contentMode: .fit)
-                                        .foregroundColor(AppColors.greenColor)
+                                        .foregroundColor(Color("mainColor"))
                                 }
                             }
                             .frame(width: geometry.size.width, height: 200)
@@ -109,7 +107,7 @@ struct CreateWorkshop: View {
                         TextField("", text: $title)
                             .border(1, .gray.opacity(0.5))
                         
-                        Text("description")
+                        Text("description + hilights (each preceded by /h)")
                             .italic()
                             .hAlign(.leading)
                         TextEditor(text: $description)
@@ -150,7 +148,7 @@ struct CreateWorkshop: View {
                             HStack{
                                 TextField("", text: Binding(
                                     get: { String(format: "%.2f", self.price) },
-                                    set: { if let value = Float($0) { self.price = value } }
+                                    set: { if let value = Double($0) { self.price = value } }
                                 )).keyboardType(.decimalPad)
                                     .border(1, .gray.opacity(0.5))
                                 Text("€")
@@ -201,7 +199,7 @@ struct CreateWorkshop: View {
                                 Button(action: {addNewEntry()}){
                                     Text("+")
                                         .font(.system(size: 30).bold())
-                                        .foregroundColor(AppColors.greenColor)
+                                        .foregroundColor(Color("mainColor"))
                                         .frame(height: 50)
                                 }
                                 
@@ -209,7 +207,7 @@ struct CreateWorkshop: View {
                             
                             HStack(spacing: 20){
                                 VStack{
-                                    ForEach(spots.indices, id: \.self) { i in
+                                    ForEach(workshopDates.indices, id: \.self) { i in
                                         Button(action: {removeEntry(index: i)}){
                                             Text("-")
                                                 .font(.system(size: 30).bold())
@@ -219,16 +217,16 @@ struct CreateWorkshop: View {
                                 }
                                 
                                 VStack{
-                                    ForEach(dates, id: \.self) { date in
-                                        Text(Functions.dateHoursToString(date: date))
+                                    ForEach(workshopDates, id: \.self) { workshop in
+                                        Text(Functions.dateToString(date: workshop.date, form: "dd/MM/yy HH:mm"))
                                             .hAlign(.leading)
                                             .frame(height: 30)
                                     }
                                 }
                                 
                                 VStack{
-                                    ForEach(spots, id: \.self) { spot in
-                                        Text("\(spot)")
+                                    ForEach(workshopDates, id: \.self) { workshop in
+                                        Text("\(workshop.spot)")
                                             .hAlign(.leading)
                                             .frame(height: 30)
                                     }
@@ -267,16 +265,14 @@ struct CreateWorkshop: View {
     }
     
     func addNewEntry() {
-        dates.insert(newDate, at: 0)
-        spots.insert(newSpot, at: 0)
-        userUIDs.insert([], at: 0)
+        let workshop = WorkshopDate(date: newDate, spot: newSpot, userRegisterUID: [])
+        workshopDates.insert(workshop, at:0)
         newSpot = 0
     }
     
     func removeEntry(index: Int) {
-        dates.remove(at: index)
-        spots.remove(at: index)
-        userUIDs.remove(at: index)
+        workshopDates.remove(at:index)
+
     }
     
     func isFormValid() -> Bool {
@@ -285,7 +281,7 @@ struct CreateWorkshop: View {
         organizer.isEmpty ||
         adress.isEmpty ||
         city.isEmpty ||
-        price != 0 ||
+        price == 0 ||
         theme1.isEmpty ||
         city.isEmpty ||
         workshopPicData == nil
@@ -301,19 +297,18 @@ struct CreateWorkshop: View {
                 let _ = try await storageRef.putDataAsync(workshopPicData!)
                 let dowloadURL = try await storageRef.downloadURL()
                     
-                let workshop = Workshop(title: title, description: description, organizer: organizer, adress: adress, city: city, price: price, theme1: theme1, theme2: theme2, dates: dates, spots: spots, userUIDs: userUIDs, workshopURL: dowloadURL, workshopImageID: imageReferenceID)
+                let workshop = Workshop(title: title, description: description, organizer: organizer, adress: adress, city: city, price: price, theme1: theme1, theme2: theme2, workshopDates: workshopDates, workshopURL: dowloadURL, workshopImageID: imageReferenceID)
                 
                 try await createDocumentAtFirebase(workshop)
 
             }catch{
-                print(error)
                 await setError(error)
             }
         }
     }
     
     func createDocumentAtFirebase(_ workshop: Workshop)async throws{
-        let doc = Firestore.firestore().collection("Workshop").document()
+        let doc = Firestore.firestore().collection("Workshops").document()
         let _ = try doc.setData(from: workshop, completion: {error in
             if error == nil{
                 var updatedWorkshop = workshop
@@ -332,8 +327,3 @@ struct CreateWorkshop: View {
 }
 
 
-
-
-#Preview {
-    CreateWorkshop()
-}

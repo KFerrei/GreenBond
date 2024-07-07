@@ -6,6 +6,7 @@ import SwiftUI
 
 struct AppColors {
     static let greenColor = Color(hex: "105b37")
+    
 }
 
 extension Color {

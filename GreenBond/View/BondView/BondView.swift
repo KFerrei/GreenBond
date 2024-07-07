@@ -25,7 +25,7 @@ struct BondView: View {
             Text("BOND")
                 .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
                 .bold()
-                .foregroundColor(AppColors.greenColor)
+                .foregroundColor(Color("mainColor"))
                 .hAlign(.leading)
                 .padding(.horizontal, 20)
             let progress = myProfile?.userProgress[Int(Calendar.current.component(.month, from: Date()))-1]
@@ -33,7 +33,7 @@ struct BondView: View {
                 Text(AppConstants.Lists.months[Int(Calendar.current.component(.month, from: Date()))-1])
                     .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
                     .bold()
-                    .foregroundColor(AppColors.greenColor)
+                    .foregroundColor(Color("mainColor"))
                     .hAlign(.leading)
                 
                 Text("\(Int(ceil(progress!)))%")
@@ -47,10 +47,10 @@ struct BondView: View {
                 ZStack(alignment: .leading) {
                     
                     Capsule()
-                        .fill(AppColors.greenColor.opacity(0.5))
+                        .fill(Color("mainColor").opacity(0.5))
                         .frame(height: 30)
                     Capsule()
-                        .fill(AppColors.greenColor)
+                        .fill(Color("mainColor"))
                         .frame(width: geometry.size.width * CGFloat(progress!/100), height: 30)
                 }
             }
@@ -73,7 +73,7 @@ struct BondView: View {
                         .fontWeight(.semibold)
                         .foregroundColor(.white)
                         .padding(13)
-                        .background(AppColors.greenColor, in: Circle())
+                        .background(Color("mainColor"), in: Circle())
                 }
                 .padding(20)
                 .padding(.bottom, 25)

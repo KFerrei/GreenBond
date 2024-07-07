@@ -32,7 +32,7 @@ struct LearnPost: Identifiable, Codable, Equatable, Hashable {
     // Custom init(from:) function that decodes the id property using the Firestore.Decoder
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        id = try container.decode(DocumentID<String>.self, forKey: .id).wrappedValue
+        _id = try container.decode(DocumentID<String>.self, forKey: .id)
         text = try container.decode(String.self, forKey: .text)
         publishedDate = try container.decode(Date.self, forKey: .publishedDate)
         likedIDs = try container.decode([String].self, forKey: .likedIDs)

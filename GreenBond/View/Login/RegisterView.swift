@@ -1,7 +1,7 @@
 //  RegisterView.swift
 //  GreenBond
 //  Created by FERREIRA Kévin on 20/6/2024.
-//  Modified by FERREIRA Kévin on 23/6/2024.
+//  Modified by FERREIRA Kévin on 7/7/2024.
 
 import SwiftUI
 import PhotosUI
@@ -13,12 +13,11 @@ struct RegisterView: View {
     
     @State var emailID : String = ""
     @State var password: String = ""
-    @State var userGender: String = ""
+    @State var userGender: String = AppConstants.Lists.genders[0]
     @State var userGivenName: String = ""
     @State var userFamilyName: String = ""
-    @State var userName: String = ""
     @State var userBirthDate: Date = Date()
-    @State var userCity: String = ""
+    @State var userCity: String = AppConstants.Lists.cities[0]
     
     @State var userProfilePicData : Data?
     @State var showImagePicker : Bool = false
@@ -33,7 +32,6 @@ struct RegisterView: View {
     @AppStorage("last_fetchingUser") var last_fetchingUser: String = ""
     @AppStorage("need_fetchUser") var need_fetchUser: Bool = false
     
-    
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
@@ -41,18 +39,16 @@ struct RegisterView: View {
 
             VStack{
                 WaveShape(points: WaveShapePoint.points_Up2)
-                    .fill(AppColors.greenColor)
-                    .frame(maxWidth: .infinity, maxHeight: 300)
+                    .fill(Color("mainColor"))
+                    .frame(maxWidth: .infinity, maxHeight: 200)
 
                 Spacer()
                 
                 WaveShape(points: WaveShapePoint.points_Down2)
-                    .fill(AppColors.greenColor)
+                    .fill(Color("mainColor"))
                     .frame(maxWidth: .infinity, maxHeight: 300)
 
             }
-            .zIndex(0)
-            .vAlign(.center)
             .ignoresSafeArea()
         
             
@@ -71,7 +67,7 @@ struct RegisterView: View {
                                 Image(systemName: "person.circle.fill")
                                     .resizable()
                                     .aspectRatio(contentMode: .fill)
-                                    .foregroundColor(Color(hex: "105b37"))
+                                    .foregroundColor(Color("mainColor"))
                             }
                         }
                         .frame(width: 100, height: 100)
@@ -89,20 +85,13 @@ struct RegisterView: View {
                             }
                         }
                         .tint(.black)
-                        TextField("user name", text: $userName)
-                            .textContentType(.givenName)
-                            .border(1, .gray.opacity(0.5))
-                    }
-                    HStack{
-                        TextField("given name", text: $userGivenName)
-                            .textContentType(.givenName)
-                            .border(1, .gray.opacity(0.5))
-                        
-                        
                         TextField("family name", text: $userFamilyName)
                             .textContentType(.familyName)
                             .border(1, .gray.opacity(0.5))
                     }
+                    TextField("given name", text: $userGivenName)
+                        .textContentType(.givenName)
+                        .border(1, .gray.opacity(0.5))
                     
                     TextField("email", text: $emailID)
                         .textContentType(.emailAddress)
@@ -125,7 +114,7 @@ struct RegisterView: View {
                     .tint(.black)
                     .textContentType(.addressCityAndState)
                     .border(1, .gray.opacity(0.5))
-                
+                    
                     
                     Button(action: registerUser){
                         Text("sign up")
@@ -137,6 +126,7 @@ struct RegisterView: View {
                     .padding(.top, 10)
                     
                 }
+                .padding(.top, 20)
                 
                 HStack{
                     Text("already have an account?")
@@ -156,7 +146,14 @@ struct RegisterView: View {
             .padding(20)
             .zIndex(1)
             .overlay(content: {
-                LoadingView(show: $isLoading)
+                if isLoading{
+                    ZStack{
+                        Rectangle()
+                            .fill(.white)
+                        LoadingView(show: $isLoading)
+                    }
+                    .ignoresSafeArea()
+                }
             })
             .photosPicker(isPresented:$showImagePicker, selection: $photoItem)
             .onChange(of: photoItem){
@@ -172,11 +169,6 @@ struct RegisterView: View {
                 }
             }
             
-            
-        }
-        .onAppear {
-            userGender = AppConstants.Lists.genders[0]
-            userCity = AppConstants.Lists.cities[0]
         }
         .alert(errorMessage, isPresented: $showError, actions: {})
         
@@ -205,18 +197,20 @@ struct RegisterView: View {
                 guard let userUID = Auth.auth().currentUser?.uid else{return}
                 guard let imageData = userProfilePicData else{return}
                 
-                let storageRef = Storage.storage().reference().child("Profile_Images").child(userUID)
+                let storageRef = Storage.storage().reference().child("ProfileImages").child(userUID)
                 let _ = try await storageRef.putDataAsync(imageData)
                 let dowloadURL = try await storageRef.downloadURL()
                 
-                let user = User(userGender: userGender, userGivenName: userGivenName, userFamilyName: userFamilyName, userName: userName, userProfileURL: dowloadURL, userCity: userCity, userBirthDate: userBirthDate, userEmail: emailID, userUID: userUID)
+                let user = User(userGender: userGender, userGivenName: userGivenName, userFamilyName: userFamilyName, userProfileURL: dowloadURL, userCity: userCity, userBirthDate: userBirthDate, userEmail: emailID, userUID: userUID)
                 
                 let _ = try Firestore.firestore().collection("Users").document(userUID).setData(from: user, completion:{
                     error in
                     if error == nil{
-                        logStatus = true
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 4.0) {
+                            logStatus = true
+                        }
                         cacheUser(user)
-                        last_fetchingUser = Functions.dateToString(date: Date())
+                        last_fetchingUser = Functions.dateToString(date: Date(), form: "dd/MM/yy")
                         need_fetchUser = false
                     }
                 })

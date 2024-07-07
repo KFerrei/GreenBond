@@ -54,7 +54,7 @@ struct CreateLearn: View {
             .padding(.vertical,10)
             .background{
                 Rectangle()
-                    .fill(AppColors.greenColor)
+                    .fill(Color("mainColor"))
                     .ignoresSafeArea()
             }
             VStack(spacing: 15){

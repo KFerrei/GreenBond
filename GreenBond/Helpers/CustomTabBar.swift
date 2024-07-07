@@ -19,7 +19,7 @@ struct CustomTabBar: View {
     var body: some View {
         ZStack{
             Rectangle()
-                .fill(AppColors.greenColor)
+                .fill(Color("mainColor"))
                 .frame(height: 100)
             
             HStack{

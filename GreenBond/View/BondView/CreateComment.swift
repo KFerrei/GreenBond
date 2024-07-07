@@ -43,8 +43,8 @@ struct CreateComment: View {
                 .font(.callout)
                 .foregroundColor(.white)
                 .padding(.vertical, 6)
+                .hAlign(.leading)
                 if comment == nil{
-                    Spacer()
                     
                     Button(action: createComment){
                         Text ("Save")
@@ -54,13 +54,13 @@ struct CreateComment: View {
                             .padding(.vertical, 6)
                             .background(.white, in: Capsule())
                     }.disableWithOpacity(postText.isEmpty)
-                    
-                    Spacer()
+                        .hAlign(.center)
                     
                     Button("Done"){
                         showKeyboard = false
                     }
                     .foregroundColor(.white)
+                    .hAlign(.trailing)
                 }
                 
                 
@@ -70,22 +70,22 @@ struct CreateComment: View {
             .padding(.vertical,10)
             .background{
                 Rectangle()
-                    .fill(AppColors.greenColor)
+                    .fill(Color("mainColor"))
                     .ignoresSafeArea()
             }
             ScrollView(.vertical, showsIndicators: false){
                 VStack(spacing: 15){
-                    
                     Text(challenge!.text)
                         .bold()
+                        .padding(.top, 20)
                     if comment == nil{
                         GeometryReader { geometry in
                             
-                            Rectangle()
-                                .frame(width: geometry.size.width + 5, height: 205)
-                                .foregroundColor(.white)
-                            
                             ZStack{
+                                Rectangle()
+                                    .frame(width: geometry.size.width + 5, height: 205)
+                                    .foregroundColor(.white)
+                                
                                 if let commentPicData, let image = UIImage(data: commentPicData){
                                     Image(uiImage: image)
                                         .resizable()
@@ -94,7 +94,7 @@ struct CreateComment: View {
                                     Image(systemName: "photo.badge.arrow.down")
                                         .resizable()
                                         .aspectRatio(contentMode: .fit)
-                                        .foregroundColor(AppColors.greenColor)
+                                        .foregroundColor(Color("mainColor"))
                                 }
                             }
                             .frame(width: geometry.size.width, height: 200)
@@ -119,27 +119,26 @@ struct CreateComment: View {
                         }
                     }
                     
-                    Text("Description:")
-                        .font(.callout)
-                        .italic()
-                        .hAlign(.leading)
-                    
                     
                     if comment == nil{
+                        Text("Description:")
+                            .font(.callout)
+                            .italic()
+                            .hAlign(.leading)
+                        
                         TextEditor(text: $postText)
                             .frame(minHeight: 100) // Set minimum height
-                            .border(1, AppColors.greenColor.opacity(0.5))
+                            .border(1, Color("mainColor").opacity(0.5))
                             .hAlign(.leading)
                             .vAlign(.top)
                     } else {
                         Text(comment!.text)
-                            .border(1, AppColors.greenColor.opacity(0.5))
                             .hAlign(.leading)
                             .vAlign(.top)
                     }
                     
                 }
-                .padding(20)
+                .padding(.horizontal, 20)
                 .focused($showKeyboard)
             }
             

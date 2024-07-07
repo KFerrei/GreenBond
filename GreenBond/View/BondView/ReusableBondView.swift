@@ -29,15 +29,16 @@ struct ReusableBondView: View {
                 
                 if isFetching{
                     ProgressView()
-                        .padding(.top, 30)
                 }else{
                     if bondChallenges.isEmpty{
-                        Text("No Post's Found")
+                        LoadingView(show: $isFetching)
+                        
+                        Text("No Challenge Found")
                             .font(.caption)
                             .foregroundColor(.gray)
                             .padding(.top, 30)
                     }else{
-                        Posts()
+                        ChallengesView()
                             .padding(.top, 5)
                             .padding(.bottom, 10)
                     }
@@ -68,23 +69,19 @@ struct ReusableBondView: View {
     }
     
     @ViewBuilder
-    func Posts()->some View{
+    func ChallengesView()->some View{
         ForEach(bondChallenges){post in
             
             let comment = commentChallenges.first(where: { $0.challengeID == post.id })
             
-            BondCardView(post: post, comment: comment, openComment: $openComment, commentToShow: $commentToShow, challengeToShow: $challengeToShow, onDelete: {
-                withAnimation(.easeInOut(duration: 0.25)){
-                    bondChallenges.removeAll{post.id == $0.id}
-                }
-            })
+            BondCardView(post: post, comment: comment, openComment: $openComment, commentToShow: $commentToShow, challengeToShow: $challengeToShow)
         }
         
     }
     
     func fetchChallenges(forceRefresh: Bool = false)async{
         let current_month = Calendar.current.component(.month, from: Date())
-        let lastMonthFetch = Calendar.current.component(.month, from: Functions.stringToDate(string: last_fetchingChallenges) ?? Date())
+        let lastMonthFetch = Calendar.current.component(.month, from: Functions.stringToDate(string: last_fetchingChallenges, form: "dd/MM/yy") ?? Date())
         if !forceRefresh, lastMonthFetch == current_month, let cachedChallenges = loadCachedChallenges() {
             print("cache")
             bondChallenges = cachedChallenges
@@ -101,7 +98,7 @@ struct ReusableBondView: View {
                 await MainActor.run(body:{
                     bondChallenges.append(contentsOf: fetchedPosts)
                     isFetching = false
-                    last_fetchingChallenges = Functions.dateToString(date: Date())
+                    last_fetchingChallenges = Functions.dateToString(date: Date(), form: "dd/MM/yy")
                     nbChallenges = bondChallenges.count
                     cacheChallenges(bondChallenges)
                 })

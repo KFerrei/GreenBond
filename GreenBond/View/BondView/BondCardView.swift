@@ -17,11 +17,6 @@ struct BondCardView: View {
     @Binding var commentToShow: Comment?
     @Binding var challengeToShow: BondChallenges?
     
-    
-    var onDelete: ()->()
-    
-    @State private var docListener: ListenerRegistration?
-    
     var body: some View {
         
         VStack(alignment: .leading, spacing: 6){
@@ -33,10 +28,9 @@ struct BondCardView: View {
                 HStack{
                     
                     Text(post.text)
-                    
                     VStack{
                         Image(systemName: comment != nil ? "checkmark": "minus")
-                        Text(comment?.date != nil ? "\(Functions.dayToString(date: comment?.date ?? Date()))": "--/--/--")
+                        Text(comment?.date != nil ? "\(Functions.dateToString(date: comment?.date ?? Date(), form: "dd/MM/yy"))": "--/--/--")
                         Text("\(post.greenPoints) gp")
                     }
                     .frame(width: 75)
@@ -45,7 +39,7 @@ struct BondCardView: View {
         }
         .foregroundColor(comment?.date == nil ? .black: .white)
         .hAlign(.center)
-        .borderFillView(3, AppColors.greenColor, comment?.date == nil ? .white: AppColors.greenColor)
+        .borderFillView(3, Color("mainColor"), comment?.date == nil ? .white: Color("mainColor"))
         .padding(.horizontal, 20)
 
     }

@@ -11,7 +11,7 @@ struct BarGraphBuilder: View {
     var dataPoints: [Float]
     
     var body: some View {
-        Text("Progress")
+        Text("progress")
             .font(.title.bold())
             .hAlign(.leading)
             .padding(15)
@@ -24,7 +24,7 @@ struct BarGraphBuilder: View {
                     Text("\(Int(ceil(dataPoints[abs(index%12)])))%")
                     Spacer()
                     Capsule()
-                        .fill(AppColors.greenColor)
+                        .fill(Color("mainColor"))
                         .frame(width: 30, height: 1.4*CGFloat(dataPoints[abs(index%12)]))
                         .padding(.bottom, 10)
                     
