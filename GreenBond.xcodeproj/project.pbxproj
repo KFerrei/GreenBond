@@ -12,6 +12,14 @@
 		575AEC252C35CD6E00D73623 /* BondChallenges.swift in Sources */ = {isa = PBXBuildFile; fileRef = 575AEC242C35CD6E00D73623 /* BondChallenges.swift */; };
 		575AEC272C35E0B200D73623 /* ReusableBondView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 575AEC262C35E0B200D73623 /* ReusableBondView.swift */; };
 		575AEC292C35E25300D73623 /* BondCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 575AEC282C35E25300D73623 /* BondCardView.swift */; };
+		575AEC2B2C36E58400D73623 /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 575AEC2A2C36E58400D73623 /* Functions.swift */; };
+		575AEC2D2C37FE2E00D73623 /* CreateComment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 575AEC2C2C37FE2E00D73623 /* CreateComment.swift */; };
+		575AEC312C37FEB500D73623 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 575AEC302C37FEB400D73623 /* Comment.swift */; };
+		575AEC332C39622500D73623 /* DeleteAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 575AEC322C39622500D73623 /* DeleteAccount.swift */; };
+		575AEC372C397FF300D73623 /* Workshop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 575AEC362C397FF300D73623 /* Workshop.swift */; };
+		575AEC392C39819200D73623 /* EngageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 575AEC382C39819200D73623 /* EngageView.swift */; };
+		575AEC3B2C3988DC00D73623 /* ReusableEngageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 575AEC3A2C3988DB00D73623 /* ReusableEngageView.swift */; };
+		575AEC3D2C3989B200D73623 /* CreateWorkshop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 575AEC3C2C3989B200D73623 /* CreateWorkshop.swift */; };
 		576583032C3453FF00A817FC /* CreateLearn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 576583022C3453FF00A817FC /* CreateLearn.swift */; };
 		576583082C34544900A817FC /* LearnPost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 576583072C34544900A817FC /* LearnPost.swift */; };
 		5765830A2C345FD300A817FC /* LearnView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 576583092C345FD300A817FC /* LearnView.swift */; };
@@ -48,6 +56,14 @@
 		575AEC242C35CD6E00D73623 /* BondChallenges.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BondChallenges.swift; sourceTree = "<group>"; };
 		575AEC262C35E0B200D73623 /* ReusableBondView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReusableBondView.swift; sourceTree = "<group>"; };
 		575AEC282C35E25300D73623 /* BondCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BondCardView.swift; sourceTree = "<group>"; };
+		575AEC2A2C36E58400D73623 /* Functions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Functions.swift; sourceTree = "<group>"; };
+		575AEC2C2C37FE2E00D73623 /* CreateComment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateComment.swift; sourceTree = "<group>"; };
+		575AEC302C37FEB400D73623 /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
+		575AEC322C39622500D73623 /* DeleteAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccount.swift; sourceTree = "<group>"; };
+		575AEC362C397FF300D73623 /* Workshop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Workshop.swift; sourceTree = "<group>"; };
+		575AEC382C39819200D73623 /* EngageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EngageView.swift; sourceTree = "<group>"; };
+		575AEC3A2C3988DB00D73623 /* ReusableEngageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReusableEngageView.swift; sourceTree = "<group>"; };
+		575AEC3C2C3989B200D73623 /* CreateWorkshop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateWorkshop.swift; sourceTree = "<group>"; };
 		576583022C3453FF00A817FC /* CreateLearn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateLearn.swift; sourceTree = "<group>"; };
 		576583072C34544900A817FC /* LearnPost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LearnPost.swift; sourceTree = "<group>"; };
 		576583092C345FD300A817FC /* LearnView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LearnView.swift; sourceTree = "<group>"; };
@@ -96,6 +112,7 @@
 			children = (
 				57D590CF2C275B63001D614F /* ProfileContent.swift */,
 				57D590CD2C27520F001D614F /* ProfileView.swift */,
+				575AEC322C39622500D73623 /* DeleteAccount.swift */,
 			);
 			path = ProfileView;
 			sourceTree = "<group>";
@@ -105,6 +122,7 @@
 			children = (
 				576583022C3453FF00A817FC /* CreateLearn.swift */,
 				575AEC222C35C11E00D73623 /* CreateBond.swift */,
+				575AEC3C2C3989B200D73623 /* CreateWorkshop.swift */,
 			);
 			path = AdminView;
 			sourceTree = "<group>";
@@ -125,6 +143,7 @@
 				575AEC202C35C08400D73623 /* BondView.swift */,
 				575AEC262C35E0B200D73623 /* ReusableBondView.swift */,
 				575AEC282C35E25300D73623 /* BondCardView.swift */,
+				575AEC2C2C37FE2E00D73623 /* CreateComment.swift */,
 			);
 			path = BondView;
 			sourceTree = "<group>";
@@ -132,6 +151,8 @@
 		57690DC22C353D560015844B /* EngageView */ = {
 			isa = PBXGroup;
 			children = (
+				575AEC382C39819200D73623 /* EngageView.swift */,
+				575AEC3A2C3988DB00D73623 /* ReusableEngageView.swift */,
 			);
 			path = EngageView;
 			sourceTree = "<group>";
@@ -215,6 +236,8 @@
 				57E0ECDA2C2575E200BE0FCC /* User.swift */,
 				576583072C34544900A817FC /* LearnPost.swift */,
 				575AEC242C35CD6E00D73623 /* BondChallenges.swift */,
+				575AEC302C37FEB400D73623 /* Comment.swift */,
+				575AEC362C397FF300D73623 /* Workshop.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -235,6 +258,7 @@
 				5787DAD22C28610B005A4686 /* WaveShape.swift */,
 				5787DAD42C286D53005A4686 /* CustomTabBar.swift */,
 				5787DAD72C287C53005A4686 /* BarGraphBuilder.swift */,
+				575AEC2A2C36E58400D73623 /* Functions.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -323,23 +347,31 @@
 			files = (
 				576583082C34544900A817FC /* LearnPost.swift in Sources */,
 				5787DAD32C28610C005A4686 /* WaveShape.swift in Sources */,
+				575AEC392C39819200D73623 /* EngageView.swift in Sources */,
 				57E0ECD02C24BF1400BE0FCC /* LoginView.swift in Sources */,
+				575AEC312C37FEB500D73623 /* Comment.swift in Sources */,
 				576583032C3453FF00A817FC /* CreateLearn.swift in Sources */,
 				5787DAD52C286D53005A4686 /* CustomTabBar.swift in Sources */,
+				575AEC2B2C36E58400D73623 /* Functions.swift in Sources */,
+				575AEC3B2C3988DC00D73623 /* ReusableEngageView.swift in Sources */,
 				57E0ECD22C24CD1C00BE0FCC /* RegisterView.swift in Sources */,
 				57E0ECBC2C24B4DE00BE0FCC /* ContentView.swift in Sources */,
 				5765830A2C345FD300A817FC /* LearnView.swift in Sources */,
+				575AEC372C397FF300D73623 /* Workshop.swift in Sources */,
 				575AEC252C35CD6E00D73623 /* BondChallenges.swift in Sources */,
+				575AEC2D2C37FE2E00D73623 /* CreateComment.swift in Sources */,
 				575AEC232C35C11E00D73623 /* CreateBond.swift in Sources */,
 				5765830E2C34651F00A817FC /* ReusableLearnPostView.swift in Sources */,
 				575AEC292C35E25300D73623 /* BondCardView.swift in Sources */,
 				57D590D02C275B63001D614F /* ProfileContent.swift in Sources */,
+				575AEC3D2C3989B200D73623 /* CreateWorkshop.swift in Sources */,
 				57D590CC2C274DD6001D614F /* MainView.swift in Sources */,
 				57D590C42C274083001D614F /* Color+Extensions.swift in Sources */,
 				57D590C22C27405A001D614F /* View+Extensions.swift in Sources */,
 				575AEC212C35C08400D73623 /* BondView.swift in Sources */,
 				57E0ECDB2C2575E200BE0FCC /* User.swift in Sources */,
 				57E0ECBA2C24B4DE00BE0FCC /* GreenBondApp.swift in Sources */,
+				575AEC332C39622500D73623 /* DeleteAccount.swift in Sources */,
 				575AEC272C35E0B200D73623 /* ReusableBondView.swift in Sources */,
 				576583102C346EFA00A817FC /* LearnPostCardView.swift in Sources */,
 				57F90E952C25DB170016D90F /* LoadingView.swift in Sources */,
@@ -476,6 +508,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"GreenBond/Preview Content\"";
@@ -486,7 +519,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -496,6 +529,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = GreenBond.GreenBond;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -507,6 +541,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"GreenBond/Preview Content\"";
@@ -517,7 +552,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -527,6 +562,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = GreenBond.GreenBond;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

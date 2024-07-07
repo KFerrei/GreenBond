@@ -6,22 +6,27 @@
 import SwiftUI
 
 struct MainView: View {
+    @State private var myProfile: User?
     @State private var selectedTab = Tabs.profile
-
+    
     var body: some View {
         ZStack{
-            switch selectedTab {
-            case .learn:
-                LearnView()
-                    .padding(.bottom, 55)
-            case .bond:
-                BondView()
-                    .padding(.bottom, 55)
-            case .engage:
-                Text("engage")
-            case .profile:
-                ProfileView()
-                    .padding(.bottom, 55)
+            Group{
+                switch selectedTab {
+                case .learn:
+                    LearnView(myProfile: $myProfile)
+                        .padding(.bottom, 55)
+                case .bond:
+                    BondView(myProfile: $myProfile)
+                        .padding(.bottom, 55)
+                case .engage:
+                    EngageView(myProfile: $myProfile)
+                        .padding(.bottom, 55)
+                case .profile:
+                    ProfileView(myProfile: $myProfile)
+                        .padding(.bottom, 55)
+                        
+                }
             }
             
             VStack {
@@ -35,6 +40,3 @@ struct MainView: View {
     }
 }
 
-#Preview {
-    MainView()
-}

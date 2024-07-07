@@ -4,7 +4,7 @@
 //  Modified by FERREIRA Kévin on 21/6/2024.
 
 import SwiftUI
-import FirebaseFirestoreSwift
+import FirebaseFirestore
 
 struct User: Identifiable, Codable{
     @DocumentID var id: String?
@@ -13,20 +13,15 @@ struct User: Identifiable, Codable{
     var userFamilyName: String
     var userName: String
     var userProfileURL: URL
-    
     var userCity: String
     var userBirthDate: Date
-    
     var userEmail: String
-    
     var userRegisterDate: Date
     var userDatePremium: Date
-    var userGreenCoins: Int = 0
-    
+    var userGreenCoins: Int
     var userUID: String
-    
-    var userProgress: [Float] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    var isAdmin: Bool = false
+    var userProgress: [Float]
+    var isAdmin: Bool
     
     enum CodingKeys: CodingKey{
         case id
@@ -44,6 +39,73 @@ struct User: Identifiable, Codable{
         case userUID
         case userProgress
         case isAdmin
+    }
+    
+    init(id: String? = nil, userGender: String, userGivenName: String, userFamilyName: String, userName: String, userProfileURL: URL, userCity: String, userBirthDate: Date, userEmail: String, userRegisterDate: Date = Date(), userDatePremium: Date = Calendar.current.date(byAdding: .month, value: 1, to: Date())!, userGreenCoins: Int = 0, userUID: String, userProgress: [Float] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], isAdmin: Bool = false){
+        self.id = id
+        self.userGender = userGender
+        self.userGivenName = userGivenName
+        self.userFamilyName = userFamilyName
+        self.userName = userName
+        self.userProfileURL = userProfileURL
+        self.userCity = userCity
+        self.userBirthDate = userBirthDate
+        self.userEmail = userEmail
+        self.userRegisterDate = userRegisterDate
+        self.userDatePremium = userDatePremium
+        self.userGreenCoins = userGreenCoins
+        self.userUID = userUID
+        self.userProgress = userProgress
+        self.isAdmin = isAdmin
+    }
+    
+    // Custom init(from:) function that decodes the id property using the Firestore.Decoder
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(DocumentID<String>.self, forKey: .id).wrappedValue
+        userGender = try container.decode(String.self, forKey: .userGender)
+        userGivenName = try container.decode(String.self, forKey: .userGivenName)
+        userFamilyName = try container.decode(String.self, forKey: .userFamilyName)
+        userName = try container.decode(String.self, forKey: .userName)
+        userProfileURL = try container.decode(URL.self, forKey: .userProfileURL)
+        userCity = try container.decode(String.self, forKey: .userCity)
+        userBirthDate = try container.decode(Date.self, forKey: .userBirthDate)
+        userEmail = try container.decode(String.self, forKey: .userEmail)
+        userRegisterDate = try container.decode(Date.self, forKey: .userRegisterDate)
+        userDatePremium = try container.decode(Date.self, forKey: .userDatePremium)
+        userGreenCoins = try container.decode(Int.self, forKey: .userGreenCoins)
+        userUID = try container.decode(String.self, forKey: .userUID)
+        userProgress = try container.decode([Float].self, forKey: .userProgress)
+        isAdmin = try container.decode(Bool.self, forKey: .isAdmin)
+    }
+    
+    // Custom encode function that encodes the DocumentID property using the Firestore.Encoder
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+
+        if let id = id {
+            let firestoreEncoder = Firestore.Encoder()
+            let something = try firestoreEncoder.encode(["id":id])
+            
+            if let mapId = something["id"] as? String {
+                try container.encode(mapId, forKey: .id)
+            }
+        }
+        
+        try container.encode(userGender, forKey: .userGender)
+        try container.encode(userGivenName, forKey: .userGivenName)
+        try container.encode(userFamilyName, forKey: .userFamilyName)
+        try container.encode(userName, forKey: .userName)
+        try container.encode(userProfileURL, forKey: .userProfileURL)
+        try container.encode(userCity, forKey: .userCity)
+        try container.encode(userBirthDate, forKey: .userBirthDate)
+        try container.encode(userEmail, forKey: .userEmail)
+        try container.encode(userRegisterDate, forKey: .userRegisterDate)
+        try container.encode(userDatePremium, forKey: .userDatePremium)
+        try container.encode(userGreenCoins, forKey: .userGreenCoins)
+        try container.encode(userUID, forKey: .userUID)
+        try container.encode(userProgress, forKey: .userProgress)
+        try container.encode(isAdmin, forKey: .isAdmin)
     }
     
 }

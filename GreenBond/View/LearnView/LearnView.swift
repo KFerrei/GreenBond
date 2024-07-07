@@ -8,11 +8,11 @@
 import SwiftUI
 
 struct LearnView: View {
+    @Binding var myProfile: User?
+    
     @State private var recentsPosts: [LearnPost] = []
     @State private var createNewPost: Bool = false
-    
-    @AppStorage("is_Admin") var isAdmin: Bool = false
-    
+        
     var body: some View {
         
         VStack{
@@ -23,13 +23,13 @@ struct LearnView: View {
                 .hAlign(.leading)
                 .padding(.horizontal, 20)
             
-            ReusableLearnPostView(learnPosts: $recentsPosts)
+            ReusableLearnPostView(learnPosts: $recentsPosts, myProfile: $myProfile)
                 .hAlign(.center)
                 .vAlign(.center)
             
         }
         .overlay(alignment: .bottomTrailing){
-            if isAdmin{
+            if let myProfile = myProfile, myProfile.isAdmin{
                 Button{
                     createNewPost.toggle()
                 } label: {
@@ -53,6 +53,3 @@ struct LearnView: View {
     }
 }
 
-#Preview {
-    LearnView()
-}

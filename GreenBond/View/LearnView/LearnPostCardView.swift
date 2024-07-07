@@ -11,22 +11,21 @@ import FirebaseFirestore
 
 struct LearnPostCardView: View {
     var post: LearnPost
+    @Binding var myProfile: User?
     
     var onUpdate: (LearnPost)->()
     var onDelete: ()->()
-    @AppStorage("user_UID") private var userUID: String = ""
-    @AppStorage("is_Admin") var isAdmin: Bool = false
+
     @State private var docListener: ListenerRegistration?
     
     var body: some View {
-        let random_color: Int = Int.random(in: 0..<2)
         
         VStack(alignment: .leading, spacing: 6){
             Text(post.text)
-                .foregroundColor(AppColors.greenColor)
+                //.foregroundColor(AppColors.greenColor)
                 
             HStack{
-                if isAdmin{
+                if (myProfile!.isAdmin){
                     Button(role:.destructive, action: deletePost, label: {Image(systemName: "trash")
                             .foregroundColor(AppColors.greenColor)
                     })
@@ -38,7 +37,7 @@ struct LearnPostCardView: View {
         }
         .hAlign(.center)
         .border(3, AppColors.greenColor)
-        .padding(.horizontal, 15)
+        .padding(.horizontal, 20)
         .onAppear{
             if docListener == nil{
                 guard let postID = post.id else {return}
@@ -72,7 +71,7 @@ struct LearnPostCardView: View {
                 .foregroundColor(.gray)
             
             Button(action: likePost){
-                Image(systemName: post.likedIDs.contains(userUID) ? "heart.fill": "heart")
+                Image(systemName: post.likedIDs.contains(myProfile!.userUID) ? "heart.fill": "heart")
             }
         
         }
@@ -82,13 +81,13 @@ struct LearnPostCardView: View {
     func likePost(){
         Task{
             guard let postID = post.id else{return}
-            if post.likedIDs.contains(userUID){
+            if post.likedIDs.contains(myProfile!.userUID){
                 try await Firestore.firestore().collection("LearnPosts").document(postID).updateData([
-                    "likedIDs": FieldValue.arrayRemove([userUID])
+                    "likedIDs": FieldValue.arrayRemove([myProfile!.userUID])
                 ])
             } else{
                 try await Firestore.firestore().collection("LearnPosts").document(postID).updateData([
-                    "likedIDs": FieldValue.arrayUnion([userUID])
+                    "likedIDs": FieldValue.arrayUnion([myProfile!.userUID])
                 ])
             }
         }
@@ -105,7 +104,3 @@ struct LearnPostCardView: View {
         }
     }
 }
-
-//#Preview {
-//    LearnPostCardView()
-//}

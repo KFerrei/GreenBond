@@ -9,61 +9,65 @@ import FirebaseFirestore
 import FirebaseStorage
 
 struct ProfileView: View {
-    @State private var myProfile: User?
+    
+    @Binding var myProfile: User?
     
     @State var showError: Bool =  false
     @State var errorMessage: String = ""
     @State var isLoading: Bool = false
+    @State var deleteAccount: Bool = false
     
     @AppStorage("log_status") var logStatus: Bool = true
-    @AppStorage("user_profile_url") var profileURL: URL?
-    @AppStorage("user_name") var userNameStored: String = ""
-    @AppStorage("user_UID") var registerUserUID: String = ""
-    @AppStorage("is_Premium") var isPremium: Bool = false
-    @AppStorage("is_Admin") var isAdmin: Bool = false
+    @AppStorage("last_fetchingUser") var last_fetchingUser: String = ""
+    @AppStorage("need_fetchUser") var need_fetchUser: Bool = false
     
     var body: some View {
-        NavigationStack{
-            VStack{
-                ZStack{
-                    
-                    WaveShape(points: WaveShapePoint.points_Up2)
-                        .fill(AppColors.greenColor)
-                        .hAlign(.center)
-                        .scaleEffect(x: 1, y: 1)
-                        .offset(x: -5, y: -100)
-                        .zIndex(0)
+        VStack{
+            ZStack{
                 
-                    VStack{
-                        if let myProfile{
-                            ProfileContent(user: myProfile)
-                                .refreshable {
-                                    self.myProfile = nil
-                                    await fetchUserData()
-                                }
-                        } else{
-                            ProgressView()
-                        }
-                    }.padding(.top, -100)
-                }
-            }
-            .toolbar{
-                ToolbarItem(placement: .navigationBarTrailing){
-                    Menu {
-                        Button("log out", action: logOutUser)
-                        Button("modify profile", action: {})
-                        
-                        Button("delete account", role: .destructive, action: deleteAccount)
-                        
-                    } label: {
-                        Image(systemName: "ellipsis")
-                            .rotationEffect(.init(degrees: 90))
-                            .tint(.white)
-                            .scaleEffect(1)
+                WaveShape(points: WaveShapePoint.points_Up2)
+                    .fill(AppColors.greenColor)
+                    .frame(maxWidth: .infinity, maxHeight: 500)
+                    .ignoresSafeArea()
+                    .vAlign(.top)
+                
+                VStack{
+                    if let myProfile{
+                        ProfileContent(user: myProfile)
+                            .padding(.top, 20)
+                            .refreshable {
+                                self.myProfile = nil
+                                await fetchUserData(forceRefresh: true)
+                            }.onAppear{
+                                //isLoading = false
+                            }
+                    } else {
+                        Text("")
+                            .onAppear {
+                                isLoading = true
+                            }
                     }
                 }
+                
+                Menu {
+                    Button("log out", action: logOutUser)
+                    Button("delete account", role: .destructive, action: {deleteAccount.toggle()})
+                    
+                } label: {
+                    Image(systemName: "ellipsis.circle")
+                        .rotationEffect(.init(degrees: 90))
+                        .tint(.white)
+                        .scaleEffect(1.5)
+                }
+                .hAlign(.trailing)
+                .vAlign(.top)
+                .padding(20)
             }
-        }            
+        }
+        .fullScreenCover(isPresented: $deleteAccount){
+            DeleteAccount(myProfile : $myProfile)
+                .transition(.move(edge: .leading))
+        }
         .overlay(content: {
             LoadingView(show: $isLoading)
         })
@@ -74,43 +78,41 @@ struct ProfileView: View {
         })
     }
     
-    func fetchUserData()async{
-        guard let userUID = Auth.auth().currentUser?.uid else{return}
-        guard let user = try? await Firestore.firestore().collection("Users").document(userUID).getDocument(as: User.self) else{return}
-        await MainActor.run(body: {
-            myProfile = user
-            profileURL = user.userProfileURL
-            userNameStored = user.userName
-            registerUserUID = user.userUID
-            isPremium = (Date() < user.userDatePremium)
-            isAdmin = user.isAdmin
-        })
-        
+    func fetchUserData(forceRefresh: Bool = false) async {
+        let last_fetch = Calendar.current.dateComponents([.day], from: Functions.stringToDate(string: last_fetchingUser) ?? Date(), to: Date())
+        if !need_fetchUser, !forceRefresh, last_fetch.day! < 1, let cachedProfile = loadCachedUser() {
+            print("cache")
+            myProfile = cachedProfile
+        } else{
+            guard let userUID = Auth.auth().currentUser?.uid else{return}
+            guard let user = try? await Firestore.firestore().collection("Users").document(userUID).getDocument(as: User.self) else{return}
+            await MainActor.run(body: {
+                print("fetch")
+                myProfile = user
+                cacheUser(user)
+                last_fetchingUser = Functions.dateToString(date: Date())
+                need_fetchUser = false
+            })
+        }
+    }
+    
+    func loadCachedUser() -> User? {
+        if let data = UserDefaults.standard.data(forKey: "cachedUser"),
+           let user = try? JSONDecoder().decode(User.self, from: data) {
+            return user
+        }
+        return nil
+    }
+    
+    func cacheUser(_ user: User) {
+        if let encoded = try? JSONEncoder().encode(user) {
+            UserDefaults.standard.set(encoded, forKey: "cachedUser")
+        }
     }
     
     func logOutUser(){
         try? Auth.auth().signOut()
         logStatus = false
-    }
-    
-    func deleteAccount(){
-        isLoading = true
-        Task{
-            do{
-                guard let userUID = Auth.auth().currentUser?.uid else{return}
-                // Step 1: First Deleting Profile Image From Storage
-                let reference = Storage.storage().reference().child("Profile_Images").child(userUID)
-                try await reference.delete()
-                //Step 2: Deletino Firestore User Document
-                try await Firestore.firestore().collection("Users").document(userUID).delete()
-                try await Auth.auth().currentUser?.delete()
-                logStatus = false
-                
-            }catch{
-                await setError(error)
-            }
-            
-        }
     }
     
     func setError(_ error: Error)async{
@@ -123,6 +125,3 @@ struct ProfileView: View {
     
 }
 
-#Preview {
-    ProfileView()
-}

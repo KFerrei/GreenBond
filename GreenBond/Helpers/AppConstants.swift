@@ -9,6 +9,7 @@ struct AppConstants {
         static let genders = ["Mr", "Ms", "Mx"]
         static let cities = ["Berlin, Germany", "Paris, France"]
         static let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ]
+        static let themes = ["Mindfulness Retreat", "Nature Workshop", "Hiking Adventure", "Wilderness Survival Skills", "Art in Nature Workshop", "Ecological Awareness Workshop", "Culture Workshop", "Workshop With kids", "Workshop With Animal", "DIY"]
     }
     
 }

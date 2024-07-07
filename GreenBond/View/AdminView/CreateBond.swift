@@ -15,9 +15,8 @@ struct CreateBond: View {
     var onPost: (BondChallenges)->()
     
     @State private var postText: String = ""
-    @State private var selectedPoints: Int = 0
-    @State private var selectedMonth: String = ""
-    //Int = Int(Calendar.current.component(.month, from: Date()))
+    @State private var selectedPoints: Int = 1
+    @State private var selectedMonth: String = "January"
     
     let numbers = Array(1...20)
     
@@ -113,8 +112,9 @@ struct CreateBond: View {
         showKeyboard = false
         Task{
             do{
+                guard let bondUID = Auth.auth().currentUser?.uid else{return}
                 let indexMonth = AppConstants.Lists.months.firstIndex(of: selectedMonth)
-                let post = BondChallenges(text: postText, month: indexMonth!+1, greenPoints: selectedPoints)
+                let post = BondChallenges(text: postText, month: indexMonth!+1, greenPoints: selectedPoints, bondUID: bondUID)
                 try await createDocumentAtFirebase(post)
                 
             }catch{
@@ -122,7 +122,7 @@ struct CreateBond: View {
             }
         }
     }
-    
+
     func createDocumentAtFirebase(_ post: BondChallenges)async throws{
         let doc = Firestore.firestore().collection("BondChallenges").document()
         let _ = try doc.setData(from: post, completion: {error in

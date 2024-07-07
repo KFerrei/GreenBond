@@ -20,28 +20,26 @@ struct LoginView: View {
     @State var isLoading: Bool = false
     
     @AppStorage("log_status") var logStatus: Bool = false
-    @AppStorage("user_name") var userNameStored: String = ""
-    @AppStorage("user_UID") var userUID: String = ""
-    @AppStorage("user_profile_url") var profileURL: URL?
-    @AppStorage("is_Premium") var isPremium: Bool = false
-    @AppStorage("is_Admin") var isAdmin: Bool = false
+    @AppStorage("last_fetchingUser") var last_fetchingUser: String = ""
+    @AppStorage("need_fetchUser") var need_fetchUser: Bool = false
 
     var body: some View {
         ZStack {
-            
-            WaveShape(points: WaveShapePoint.points_Down1)
-                .fill(AppColors.greenColor)
-                .frame(width: 100, height: 100)
-                .scaleEffect(x: 1.3, y: 1.3)
-                .offset(x: -150, y: 150)
-                .zIndex(0)
-            
-            WaveShape(points: WaveShapePoint.points_Up1)
-                .fill(AppColors.greenColor)
-                .frame(width: 100, height: 100)
-                .scaleEffect(x: 1, y: 1.2)
-                .offset(x: -250, y: -400)
-                .zIndex(0)
+            VStack{
+                WaveShape(points: WaveShapePoint.points_Up1)
+                    .fill(AppColors.greenColor)
+                    .frame(maxWidth: .infinity, maxHeight: 300)
+
+                Spacer()
+                
+                WaveShape(points: WaveShapePoint.points_Down1)
+                    .fill(AppColors.greenColor)
+                    .frame(maxWidth: .infinity, maxHeight: 300)
+
+            }
+            .zIndex(0)
+            .vAlign(.center)
+            .ignoresSafeArea()
             
             
             VStack(spacing: 10){
@@ -125,13 +123,16 @@ struct LoginView: View {
         let user = try await Firestore.firestore().collection("Users").document(userID).getDocument(as: User.self)
         await MainActor.run(body: {
             logStatus = true
-            userNameStored = user.userName
-            userUID = userID
-            profileURL = user.userProfileURL
-            isPremium = (Date() < user.userDatePremium)
-            isAdmin = user.isAdmin
-
+            cacheUser(user)
+            last_fetchingUser = Functions.dateToString(date: Date())
+            need_fetchUser = false
         })
+    }
+    
+    func cacheUser(_ user: User) {
+        if let encoded = try? JSONEncoder().encode(user) {
+            UserDefaults.standard.set(encoded, forKey: "cachedUser")
+        }
     }
     
     func resetPassword(){

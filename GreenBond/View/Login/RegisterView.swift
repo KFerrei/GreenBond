@@ -19,6 +19,7 @@ struct RegisterView: View {
     @State var userName: String = ""
     @State var userBirthDate: Date = Date()
     @State var userCity: String = ""
+    
     @State var userProfilePicData : Data?
     @State var showImagePicker : Bool = false
     @State var photoItem: PhotosPickerItem?
@@ -29,30 +30,31 @@ struct RegisterView: View {
     @State var errorMessage: String = ""
     
     @AppStorage("log_status") var logStatus: Bool = false
-    @AppStorage("user_profile_url") var profileURL: URL?
-    @AppStorage("user_name") var userNameStored: String = ""
-    @AppStorage("user_UID") var userUID: String = ""
-    @AppStorage("is_Premium") var isPremium: Bool = false
-    @AppStorage("is_Admin") var isAdmin: Bool = false
+    @AppStorage("last_fetchingUser") var last_fetchingUser: String = ""
+    @AppStorage("need_fetchUser") var need_fetchUser: Bool = false
+    
     
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
         ZStack {
 
-            WaveShape(points: WaveShapePoint.points_Down2)
-                .fill(AppColors.greenColor)
-                .frame(width: 100, height: 100)
-                .scaleEffect(x: 1.4, y: 1.4)
-                .offset(x: -200, y: 150)
-                .zIndex(0)
-            
-            WaveShape(points: WaveShapePoint.points_Up2)
+            VStack{
+                WaveShape(points: WaveShapePoint.points_Up2)
                     .fill(AppColors.greenColor)
-                    .frame(width: 100, height: 100)
-                    .scaleEffect(x: 1, y: 1)
-                    .offset(x: -150, y: -400)
-                    .zIndex(0)
+                    .frame(maxWidth: .infinity, maxHeight: 300)
+
+                Spacer()
+                
+                WaveShape(points: WaveShapePoint.points_Down2)
+                    .fill(AppColors.greenColor)
+                    .frame(maxWidth: .infinity, maxHeight: 300)
+
+            }
+            .zIndex(0)
+            .vAlign(.center)
+            .ignoresSafeArea()
+        
             
             VStack(spacing: 10){
                 VStack(spacing: 10){
@@ -145,7 +147,6 @@ struct RegisterView: View {
                     }
                     .fontWeight(.bold)
                     .foregroundColor(.white)
-                    
                 }
                 .hAlign(.center)
                 .vAlign(.bottom)
@@ -189,7 +190,7 @@ struct RegisterView: View {
                userGender.isEmpty ||
                userGivenName.isEmpty ||
                userFamilyName.isEmpty ||
-               age <= 16 ||
+               age <= 12 ||
                userCity.isEmpty ||
                userProfilePicData == nil
     }
@@ -207,26 +208,28 @@ struct RegisterView: View {
                 let storageRef = Storage.storage().reference().child("Profile_Images").child(userUID)
                 let _ = try await storageRef.putDataAsync(imageData)
                 let dowloadURL = try await storageRef.downloadURL()
-                let currentDate = Date()
-                let userDatePremium = Calendar.current.date(byAdding: .month, value: 1, to: currentDate)
                 
-                let user = User(userGender: userGender, userGivenName: userGivenName, userFamilyName: userFamilyName, userName: userName, userProfileURL: dowloadURL, userCity: userCity, userBirthDate: userBirthDate, userEmail: emailID, userRegisterDate: Date(), userDatePremium:  userDatePremium!, userUID: userUID)
+                let user = User(userGender: userGender, userGivenName: userGivenName, userFamilyName: userFamilyName, userName: userName, userProfileURL: dowloadURL, userCity: userCity, userBirthDate: userBirthDate, userEmail: emailID, userUID: userUID)
                 
                 let _ = try Firestore.firestore().collection("Users").document(userUID).setData(from: user, completion:{
                     error in
                     if error == nil{
-                        userNameStored = userName
-                        self.userUID = userUID
-                        profileURL = dowloadURL
                         logStatus = true
-                        isPremium = true
+                        cacheUser(user)
+                        last_fetchingUser = Functions.dateToString(date: Date())
+                        need_fetchUser = false
                     }
                 })
-                
                 
             }catch{
                 await setError(error)
             }
+        }
+    }
+    
+    func cacheUser(_ user: User) {
+        if let encoded = try? JSONEncoder().encode(user) {
+            UserDefaults.standard.set(encoded, forKey: "cachedUser")
         }
     }
     

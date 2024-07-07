@@ -10,6 +10,8 @@ import Firebase
 
 struct ReusableLearnPostView: View {
     @Binding var learnPosts: [LearnPost]
+    @Binding var myProfile: User?
+    
     @State var isFetching: Bool = true
     @State private var paginationDoc: QueryDocumentSnapshot?
 
@@ -49,7 +51,7 @@ struct ReusableLearnPostView: View {
     @ViewBuilder
     func Posts()->some View{
         ForEach(learnPosts){post in
-            LearnPostCardView(post: post){ updatedPost in
+            LearnPostCardView(post: post, myProfile: $myProfile){ updatedPost in
                 if let index = learnPosts.firstIndex(where: {post in post.id == updatedPost.id
                 }){ learnPosts[index].likedIDs = updatedPost.likedIDs
                 }

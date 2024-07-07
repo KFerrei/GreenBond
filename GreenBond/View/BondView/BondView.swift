@@ -8,10 +8,16 @@
 import SwiftUI
 
 struct BondView: View {
+    @Binding var myProfile: User?
+    
     @State private var recentsPosts: [BondChallenges] = []
+    @State private var recentComments: [Comment] = []
     @State private var createNewPost: Bool = false
     
-    @AppStorage("is_Admin") var isAdmin: Bool = false
+    @State var openComment: Bool = false
+    @State var commentToShow: Comment? = nil
+    @State var challengeToShow: BondChallenges? = nil
+    @State var nbChallenges: Int = 0
     
     var body: some View {
         
@@ -22,27 +28,43 @@ struct BondView: View {
                 .foregroundColor(AppColors.greenColor)
                 .hAlign(.leading)
                 .padding(.horizontal, 20)
+            let progress = myProfile?.userProgress[Int(Calendar.current.component(.month, from: Date()))-1]
             HStack{
-                
                 Text(AppConstants.Lists.months[Int(Calendar.current.component(.month, from: Date()))-1])
                     .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
                     .bold()
                     .foregroundColor(AppColors.greenColor)
                     .hAlign(.leading)
-                    .padding(.horizontal, 20)
+                
+                Text("\(Int(ceil(progress!)))%")
+                    .font(.callout)
+                    .italic()
+                    .hAlign(.trailing)
             }
+            .padding(.horizontal, 20)
             
-            Capsule()
-                .fill(AppColors.greenColor)
-                .frame(width: 30, height: 10) //CGFloat(dataPoints[abs(index%12)]))
+            GeometryReader { geometry in
+                ZStack(alignment: .leading) {
+                    
+                    Capsule()
+                        .fill(AppColors.greenColor.opacity(0.5))
+                        .frame(height: 30)
+                    Capsule()
+                        .fill(AppColors.greenColor)
+                        .frame(width: geometry.size.width * CGFloat(progress!/100), height: 30)
+                }
+            }
+            .frame(height: 30)
+            .padding(.horizontal, 20)
+            .padding(.top, -10)
             
-            ReusableBondView(learnPosts: $recentsPosts)
+            ReusableBondView(bondChallenges: $recentsPosts, commentChallenges: $recentComments, myProfile: $myProfile, openComment: $openComment, commentToShow: $commentToShow, challengeToShow: $challengeToShow, nbChallenges: $nbChallenges)
                 .hAlign(.center)
                 .vAlign(.center)
             
         }
         .overlay(alignment: .bottomTrailing){
-            if isAdmin{
+            if myProfile!.isAdmin{
                 Button{
                     createNewPost.toggle()
                 } label: {
@@ -57,6 +79,17 @@ struct BondView: View {
                 .padding(.bottom, 25)
             }
         }
+        .onChange(of: openComment) {
+            if !openComment {
+                challengeToShow = nil
+                commentToShow = nil
+            }
+        }
+        .fullScreenCover(isPresented: $openComment) {
+            if let challenge = challengeToShow {
+                CreateComment(myProfile: $myProfile, challenge: challenge, comment: commentToShow, nbChallenges: nbChallenges)
+            }
+        }
         .fullScreenCover(isPresented: $createNewPost){
             CreateBond{ post in
                 recentsPosts.insert(post, at:0)
@@ -64,9 +97,5 @@ struct BondView: View {
             }
         }
     }
-}
-
-#Preview {
-    BondView()
 }
 

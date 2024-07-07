@@ -21,14 +21,14 @@ struct BarGraphBuilder: View {
         HStack(spacing: 10) {
             ForEach(currentMonth-5 ..< (currentMonth)+1, id: \.self) { index in
                 VStack {
-                    Text("\(Int(dataPoints[abs(index%12)]))%")
+                    Text("\(Int(ceil(dataPoints[abs(index%12)])))%")
                     Spacer()
                     Capsule()
                         .fill(AppColors.greenColor)
-                        .frame(width: 30, height: CGFloat(dataPoints[abs(index%12)]))
-                    Spacer()
-                    Text(AppConstants.Lists.months[abs(index%12)])
-                        .rotationEffect(.degrees(-45))
+                        .frame(width: 30, height: 1.4*CGFloat(dataPoints[abs(index%12)]))
+                        .padding(.bottom, 10)
+                    
+                    Text(AppConstants.Lists.months[abs(index%12)].prefix(3))
                         .font(.caption)
                 }
             }

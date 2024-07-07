@@ -42,4 +42,14 @@ extension View{
                     .fill(color)
             }
     }
+    
+    func borderFillView(_ width: CGFloat, _ colorStroke: Color, _ colorFill: Color)->some View{
+        self.padding(.horizontal, 15)
+            .padding(.vertical, 15)
+            .background{
+                RoundedRectangle(cornerRadius: 5, style:.continuous)
+                    .stroke(colorStroke, lineWidth: width)
+                    .fill(colorFill)
+            }
+    }
 }
