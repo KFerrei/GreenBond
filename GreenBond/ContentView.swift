@@ -24,9 +24,9 @@ struct ContentView: View {
                         .fill(Color("mainColor"))
 
                     
-                    AnimatedBlob(w: 450, h: 450, color: .white)
-                        .frame(width: 450, height: 450)
-                        .padding(.bottom, 150)
+                    AnimatedBlob(w: 400, h: 400, color: .white)
+                        .frame(width: 400, height: 400)
+                        .padding(.bottom, 120)
                     
                     Text("green bond")
                         .font(.system(size: 50).bold())
