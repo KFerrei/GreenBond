@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct LearnView: View {
-    @Binding var myProfile: User?
+    @Binding var myProfile : User?
     
     @State private var recentsPosts: [LearnPost] = []
     @State private var createNewPost: Bool = false

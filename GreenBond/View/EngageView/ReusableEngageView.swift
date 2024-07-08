@@ -51,6 +51,7 @@ struct ReusableEngageView: View {
             await fetchWorkshops()
         }
     }
+    
     @ViewBuilder
     func WorkshopsPosts()->some View{
         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], alignment: .center) {

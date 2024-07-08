@@ -30,6 +30,9 @@
 		5765830A2C345FD300A817FC /* LearnView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 576583092C345FD300A817FC /* LearnView.swift */; };
 		5765830E2C34651F00A817FC /* ReusableLearnPostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5765830D2C34651F00A817FC /* ReusableLearnPostView.swift */; };
 		576583102C346EFA00A817FC /* LearnPostCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5765830F2C346EFA00A817FC /* LearnPostCardView.swift */; };
+		5780AC312C3BCCCA0021595A /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5780AC302C3BCCCA0021595A /* CalendarView.swift */; };
+		5780AC332C3C371B0021595A /* UserWorkshop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5780AC322C3C371B0021595A /* UserWorkshop.swift */; };
+		5780AC352C3C87A50021595A /* MyWorkshopCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5780AC342C3C87A50021595A /* MyWorkshopCardView.swift */; };
 		5787DAD32C28610C005A4686 /* WaveShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5787DAD22C28610B005A4686 /* WaveShape.swift */; };
 		5787DAD52C286D53005A4686 /* CustomTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5787DAD42C286D53005A4686 /* CustomTabBar.swift */; };
 		5787DAD82C287C53005A4686 /* BarGraphBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5787DAD72C287C53005A4686 /* BarGraphBuilder.swift */; };
@@ -78,6 +81,9 @@
 		576583092C345FD300A817FC /* LearnView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LearnView.swift; sourceTree = "<group>"; };
 		5765830D2C34651F00A817FC /* ReusableLearnPostView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReusableLearnPostView.swift; sourceTree = "<group>"; };
 		5765830F2C346EFA00A817FC /* LearnPostCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LearnPostCardView.swift; sourceTree = "<group>"; };
+		5780AC302C3BCCCA0021595A /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
+		5780AC322C3C371B0021595A /* UserWorkshop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserWorkshop.swift; sourceTree = "<group>"; };
+		5780AC342C3C87A50021595A /* MyWorkshopCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyWorkshopCardView.swift; sourceTree = "<group>"; };
 		5787DAD22C28610B005A4686 /* WaveShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaveShape.swift; sourceTree = "<group>"; };
 		5787DAD42C286D53005A4686 /* CustomTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBar.swift; sourceTree = "<group>"; };
 		5787DAD72C287C53005A4686 /* BarGraphBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarGraphBuilder.swift; sourceTree = "<group>"; };
@@ -121,6 +127,7 @@
 				57D590CF2C275B63001D614F /* ProfileContent.swift */,
 				57D590CD2C27520F001D614F /* ProfileView.swift */,
 				575AEC322C39622500D73623 /* DeleteAccount.swift */,
+				5780AC342C3C87A50021595A /* MyWorkshopCardView.swift */,
 			);
 			path = ProfileView;
 			sourceTree = "<group>";
@@ -249,6 +256,7 @@
 				575AEC302C37FEB400D73623 /* Comment.swift */,
 				575AEC362C397FF300D73623 /* Workshop.swift */,
 				575AEC4E2C3AD56500D73623 /* WorkshopDate.swift */,
+				5780AC322C3C371B0021595A /* UserWorkshop.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -271,6 +279,7 @@
 				575AEC462C3A8DF700D73623 /* AnimatedBlob.swift */,
 				57F90E942C25DB170016D90F /* LoadingView.swift */,
 				575AEC4C2C3ACE6D00D73623 /* Functions.swift */,
+				5780AC302C3BCCCA0021595A /* CalendarView.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -365,8 +374,10 @@
 				575AEC312C37FEB500D73623 /* Comment.swift in Sources */,
 				576583032C3453FF00A817FC /* CreateLearn.swift in Sources */,
 				575AEC512C3AF5AC00D73623 /* WorkshopCardView.swift in Sources */,
+				5780AC332C3C371B0021595A /* UserWorkshop.swift in Sources */,
 				5787DAD52C286D53005A4686 /* CustomTabBar.swift in Sources */,
 				575AEC3B2C3988DC00D73623 /* ReusableEngageView.swift in Sources */,
+				5780AC312C3BCCCA0021595A /* CalendarView.swift in Sources */,
 				57E0ECD22C24CD1C00BE0FCC /* RegisterView.swift in Sources */,
 				575AEC472C3A8DF700D73623 /* AnimatedBlob.swift in Sources */,
 				575AEC4F2C3AD56500D73623 /* WorkshopDate.swift in Sources */,
@@ -388,6 +399,7 @@
 				57E0ECBA2C24B4DE00BE0FCC /* GreenBondApp.swift in Sources */,
 				575AEC332C39622500D73623 /* DeleteAccount.swift in Sources */,
 				575AEC532C3B057400D73623 /* WorkshopView.swift in Sources */,
+				5780AC352C3C87A50021595A /* MyWorkshopCardView.swift in Sources */,
 				575AEC272C35E0B200D73623 /* ReusableBondView.swift in Sources */,
 				576583102C346EFA00A817FC /* LearnPostCardView.swift in Sources */,
 				57F90E952C25DB170016D90F /* LoadingView.swift in Sources */,

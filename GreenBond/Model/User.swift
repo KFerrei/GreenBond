@@ -21,6 +21,7 @@ struct User: Identifiable, Codable, Equatable, Hashable{
     var userUID: String
     var userProgress: [Float]
     var isAdmin: Bool
+    var myWorkshops : [UserWorkshop]
     
     
     enum CodingKeys: CodingKey{
@@ -38,10 +39,11 @@ struct User: Identifiable, Codable, Equatable, Hashable{
         case userUID
         case userProgress
         case isAdmin
+        case myWorkshops
         
     }
     
-    init(id: String? = nil, userGender: String, userGivenName: String, userFamilyName: String, userProfileURL: URL, userCity: String, userBirthDate: Date, userEmail: String, userRegisterDate: Date = Date(), userDatePremium: Date = Calendar.current.date(byAdding: .month, value: 1, to: Date())!, userGreenCoins: Int = 0, userUID: String, userProgress: [Float] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], isAdmin: Bool = false){
+    init(id: String? = nil, userGender: String, userGivenName: String, userFamilyName: String, userProfileURL: URL, userCity: String, userBirthDate: Date, userEmail: String, userRegisterDate: Date = Date(), userDatePremium: Date = Calendar.current.date(byAdding: .month, value: 1, to: Date())!, userGreenCoins: Int = 0, userUID: String, userProgress: [Float] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], isAdmin: Bool = false, myWorkshops: [UserWorkshop] = []){
         self.id = id
         self.userGender = userGender
         self.userGivenName = userGivenName
@@ -56,6 +58,7 @@ struct User: Identifiable, Codable, Equatable, Hashable{
         self.userUID = userUID
         self.userProgress = userProgress
         self.isAdmin = isAdmin
+        self.myWorkshops = myWorkshops
     }
     
     // Custom init(from:) function that decodes the id property using the Firestore.Decoder
@@ -76,6 +79,7 @@ struct User: Identifiable, Codable, Equatable, Hashable{
         userUID = try container.decode(String.self, forKey: .userUID)
         userProgress = try container.decode([Float].self, forKey: .userProgress)
         isAdmin = try container.decode(Bool.self, forKey: .isAdmin)
+        myWorkshops = try container.decode([UserWorkshop].self, forKey: .myWorkshops)
     }
     
     // Custom encode function that encodes the DocumentID property using the Firestore.Encoder
@@ -103,6 +107,11 @@ struct User: Identifiable, Codable, Equatable, Hashable{
         try container.encode(userUID, forKey: .userUID)
         try container.encode(userProgress, forKey: .userProgress)
         try container.encode(isAdmin, forKey: .isAdmin)
+        try container.encode(myWorkshops, forKey: .myWorkshops)
     }
+    
+    mutating func sortWorkshopsByDate() ->  [UserWorkshop]{
+           return myWorkshops.sorted { $0.date < $1.date }
+       }
     
 }

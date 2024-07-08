@@ -12,7 +12,7 @@ struct BarGraphBuilder: View {
     
     var body: some View {
         Text("progress")
-            .font(.title.bold())
+            .font(.title)
             .hAlign(.leading)
             .padding(15)
         

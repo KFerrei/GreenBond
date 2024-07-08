@@ -23,6 +23,7 @@ struct CreateWorkshop: View {
     @State private var workshopDates: [WorkshopDate] = []
     @State private var newDate: Date = Date()
     @State private var newSpot: Int = 0
+    @State private var forPremium: Bool = false
     
     @Environment(\.dismiss) private var dismiss
     @State private var isLoading: Bool = false
@@ -196,6 +197,9 @@ struct CreateWorkshop: View {
                                     .border(1, .gray.opacity(0.5))
                                     .frame(height: 50)
                                 
+                                Button(action: {forPremium.toggle()}){Image(systemName: forPremium ? "crown.fill" : "crown")}
+                                    .frame(height: 50)
+                                
                                 Button(action: {addNewEntry()}){
                                     Text("+")
                                         .font(.system(size: 30).bold())
@@ -231,6 +235,16 @@ struct CreateWorkshop: View {
                                             .frame(height: 30)
                                     }
                                 }
+                                .frame(width: 90)
+                                
+                                VStack{
+                                    ForEach(workshopDates, id: \.self) { workshop in
+                                        Image(systemName: workshop.forPremium ? "crown.fill" : "crown")
+                                            .hAlign(.leading)
+                                            .frame(height: 30)
+                                    }
+                                }
+                                .frame(width: 30)
                                 
                             }.padding(.leading, 15)
                             
@@ -265,9 +279,8 @@ struct CreateWorkshop: View {
     }
     
     func addNewEntry() {
-        let workshop = WorkshopDate(date: newDate, spot: newSpot, userRegisterUID: [])
+        let workshop = WorkshopDate(date: newDate, spot: newSpot, userRegisterUID: [], forPremium: forPremium)
         workshopDates.insert(workshop, at:0)
-        newSpot = 0
     }
     
     func removeEntry(index: Int) {
@@ -296,10 +309,20 @@ struct CreateWorkshop: View {
                 let storageRef = Storage.storage().reference().child("WorkshopImages").child(imageReferenceID)
                 let _ = try await storageRef.putDataAsync(workshopPicData!)
                 let dowloadURL = try await storageRef.downloadURL()
-                    
-                let workshop = Workshop(title: title, description: description, organizer: organizer, adress: adress, city: city, price: price, theme1: theme1, theme2: theme2, workshopDates: workshopDates, workshopURL: dowloadURL, workshopImageID: imageReferenceID)
+                var workshopDateDocumentIDs: [String] = []
                 
-                try await createDocumentAtFirebase(workshop)
+                for wDate in workshopDates {
+                    do {
+                        let ref = try await createWorkshopDatesAtFirebase(wDate)
+                        workshopDateDocumentIDs.append(ref)
+                    } catch {
+                        print("Error creating document: \(error)")
+                    }
+                }
+                
+                let workshop = Workshop(title: title, description: description, organizer: organizer, adress: adress, city: city, price: price, theme1: theme1, theme2: theme2, workshopDates: workshopDateDocumentIDs, workshopURL: dowloadURL, workshopImageID: imageReferenceID)
+                
+                try await createWorkshopAtFirebase(workshop)
 
             }catch{
                 await setError(error)
@@ -307,7 +330,18 @@ struct CreateWorkshop: View {
         }
     }
     
-    func createDocumentAtFirebase(_ workshop: Workshop)async throws{
+    func createWorkshopDatesAtFirebase(_ workshopDate: WorkshopDate)async throws -> String{
+        let doc = Firestore.firestore().collection("WorkshopsDates").document()
+        let _ = try doc.setData(from: workshopDate, completion: {error in
+            if error == nil{
+                var updatedWorkshop = workshopDate
+                updatedWorkshop.id = doc.documentID
+            }
+        })
+        return doc.documentID
+    }
+    
+    func createWorkshopAtFirebase(_ workshop: Workshop)async throws{
         let doc = Firestore.firestore().collection("Workshops").document()
         let _ = try doc.setData(from: workshop, completion: {error in
             if error == nil{

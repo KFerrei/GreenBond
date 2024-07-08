@@ -17,10 +17,15 @@ struct WorkshopView: View {
     @Binding var myProfile: User?
     var workshop: Workshop?
     
+    
+    @State var workshopDateSelected : WorkshopDate?
+    @State var allWorkshopDates : [WorkshopDate] = []
+    
     @Environment(\.dismiss) private var dismiss
     @State private var isLoading: Bool = false
     @State private var errorMessage: String = ""
     @State private var showError: Bool = false
+    @State private var isFetching: Bool = false
     
     var body: some View {
         VStack{
@@ -103,23 +108,104 @@ struct WorkshopView: View {
                         .font(.body)
                         .hAlign(.center)
                     
-                    Text("Price :")
+                    Text("Registration")
+                        .font(.headline.bold())
+                        .hAlign(.center)
+                        .padding(.top, 15)
+                    
+                    Text("Select a date  :")
                         .font(.headline.bold())
                         .hAlign(.leading)
                         .padding(.top, 5)
                     
-                    Text("\(String(workshop!.price)) €")
-                        .font(.body)
-                        .hAlign(.center)
-                    
-                    Button(action: {}){
-                        Text("register for this workshop")
-                            .foregroundColor(.white)
-                            .hAlign(.center)
-                            .fillView(Color("mainColor"))
+                    if isFetching{
+                        ProgressView()
+                    } else {
+                        CalendarView(workshopDates: allWorkshopDates, workshopDateSelected : $workshopDateSelected, myProfile: $myProfile)
                     }
-                    //.disableWithOpacity(isFormValid())
-                    .padding(.top, 10)
+                    
+                    if let workshopDateSelected{
+                        Text("Total price :")
+                            .font(.headline.bold())
+                            .hAlign(.leading)
+                            .padding(.top, 5)
+                        LazyVGrid(columns: [GridItem(.fixed(10)), GridItem(.flexible()), GridItem(.fixed(130))], alignment: .center){
+                            
+                            Text("")
+                            Text("\(String(workshop!.price)) €")
+                                .font(.body)
+                                .hAlign(.trailing)
+                            Text("")
+                            
+                            //discount green points
+                            
+                            Text("-")
+                                .font(.body)
+                            if (myProfile!.userGreenCoins >= 50 ){
+                                Text("5.00 €")
+                                    .font(.body)
+                                    .hAlign(.trailing)
+                            } else {
+                                Text("0.00 €")
+                                    .font(.body)
+                                    .hAlign(.trailing)
+                            }
+                            Text("(50 gp = 5€)")
+                                .italic()
+                                .font(.footnote)
+                            
+                            
+                            
+                            //discount premium if event not premium
+                            if (!workshopDateSelected.forPremium){
+                                
+                                Text("-")
+                                    .font(.body)
+                                if (Date() < myProfile!.userDatePremium){
+                                    Text("\(String(format: "%.2f", workshop!.price*0.1)) €")
+                                        .font(.body)
+                                        .hAlign(.trailing)
+                                } else {
+                                    Text("0.00 €")
+                                        .font(.body)
+                                        .hAlign(.trailing)
+                                }
+                                Text("(-10% for premium)")
+                                    .italic()
+                                    .font(.footnote)
+                            }
+                            Text("")
+                            Divider()
+                            Text("")
+                            
+                            Text("=")
+                            
+                            Text("\(String(totalPrice())) €")
+                                .font(.body.bold())
+                                .hAlign(.trailing)
+
+                            
+                        }
+                        .frame(width: 270)
+                        
+                        Text("")
+                        
+                        
+                        Button(action:registerWorkshop){
+                            Text("register for this workshop")
+                                .foregroundColor(.white)
+                                .hAlign(.center)
+                                .fillView(Color("mainColor"))
+                        }
+                        .disableWithOpacity(workshopDateSelected.userRegisterUID.contains(myProfile!.id!))
+                        .padding(.top, 10)
+                        if (workshopDateSelected.userRegisterUID.contains(myProfile!.id!)){
+                            Text("Already register")
+                                .italic()
+                                .font(.footnote)
+                                .hAlign(.center)
+                        }
+                    }
                     
                 }
             }
@@ -129,16 +215,84 @@ struct WorkshopView: View {
             .overlay{
                 LoadingView(show: $isLoading)
             }
+            .refreshable {
+                isFetching = true
+                self.allWorkshopDates = []
+                await fetchWorkshopDate()
+            }
+            .task{
+                guard allWorkshopDates.isEmpty else{return}
+                await fetchWorkshopDate()
+            }
         }
     }
     
     
+    func fetchWorkshopDate()async{
+        do{
+            let db = Firestore.firestore().collection("WorkshopsDates")
+            for id in workshop!.workshopDates{
+                let doc = try await db.document(id).getDocument(as: WorkshopDate.self)
+                await MainActor.run {
+                    allWorkshopDates.append(doc)
+                }
+                
+            }
+            allWorkshopDates.sort { $0.date < $1.date }
+            isFetching = false
+        }catch{
+            
+        }
+    }
+    
+    func totalPrice() -> Double{
+        var totalPrice = workshop!.price
+        if (myProfile!.userGreenCoins >= 50 ) {
+            totalPrice = totalPrice - 5.00
+        }
+        if (!workshopDateSelected!.forPremium && (Date() < myProfile!.userDatePremium)){
+            totalPrice = totalPrice*0.9
+        }
+        return Double(String(format:"%.2f", totalPrice)) ?? totalPrice
+    }
+    
+    func registerWorkshop(){
+        isLoading = true
+        Task{
+            do{
+                try await modifyAtFirebase()
+            }
+            catch{
+                print(error)
+                await setError(error)
+            }
+        }
+    }
+    
+    func modifyAtFirebase()async throws{
+        do {
+            let doc = Firestore.firestore().collection("WorkshopsDates").document(workshopDateSelected!.id!)
+            
+            try await doc.updateData([
+                "userRegisterUID": FieldValue.arrayUnion([myProfile!.id!])
+            ])
+            
+            updateUser()
+        } catch {
+            print(error)
+        }
+    }
+
     func updateUser(){
         do {
-            myProfile?.userGreenCoins = myProfile!.userGreenCoins
-
             let doc = Firestore.firestore().collection("Users").document(myProfile!.userUID)
+            if (myProfile!.userGreenCoins >= 50 ){
+                myProfile?.userGreenCoins = myProfile!.userGreenCoins - 50
+            }
             
+            let registerWorkshop = UserWorkshop(workshopID: workshop!.id!, workshopDateID: workshopDateSelected!.id!, title: workshop!.title, organizer: workshop!.organizer, adress: workshop!.adress, city: workshop!.city, workshopURL: workshop!.workshopURL!, date: workshopDateSelected!.date, pricePayed:  totalPrice(), gpUsed: (myProfile!.userGreenCoins >= 50 ) ? 50 : 0)
+            
+            myProfile!.myWorkshops.append(registerWorkshop)
             try doc.setData(from: myProfile, completion : {error in
                 if error == nil{
                     isLoading = false

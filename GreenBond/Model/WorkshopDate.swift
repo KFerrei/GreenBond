@@ -14,19 +14,22 @@ struct WorkshopDate: Identifiable, Codable, Hashable  {
     var date: Date
     var spot: Int
     var userRegisterUID: [String]
+    var forPremium: Bool
     
     enum CodingKeys: CodingKey {
         case id
         case date
         case spot
         case userRegisterUID
+        case forPremium
     }
     
-    init(id: String? = nil, date: Date, spot: Int, userRegisterUID: [String]){
+    init(id: String? = nil, date: Date, spot: Int, userRegisterUID: [String], forPremium: Bool){
         self.id = id
         self.date = date
         self.spot = spot
         self.userRegisterUID = userRegisterUID
+        self.forPremium = forPremium
     }
     
     // Custom init(from:) function that decodes the id property using the Firestore.Decoder
@@ -37,6 +40,7 @@ struct WorkshopDate: Identifiable, Codable, Hashable  {
         date = try container.decode(Date.self, forKey: .date)
         spot = try container.decode(Int.self, forKey: .spot)
         userRegisterUID = try container.decode([String].self, forKey: .userRegisterUID)
+        forPremium = try container.decode(Bool.self, forKey: .forPremium)
     }
     
     // Custom encode function that encodes the DocumentID property using the Firestore.Encoder
@@ -50,10 +54,10 @@ struct WorkshopDate: Identifiable, Codable, Hashable  {
                 try container.encode(mapId, forKey: .id)
             }
         }
-
         try container.encode(date, forKey: .date)
         try container.encode(spot, forKey: .spot)
         try container.encode(userRegisterUID, forKey: .userRegisterUID)
+        try container.encode(forPremium, forKey: .forPremium)
 
     }
 }

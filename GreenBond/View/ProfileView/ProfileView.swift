@@ -65,6 +65,11 @@ struct ProfileView: View {
                 .transition(.move(edge: .leading))
         }
         .alert(errorMessage, isPresented: $showError, actions: {})
+        .onChange(of: need_fetchUser){
+            Task{
+                await fetchUserData()
+            }
+        }
         .task({
             if myProfile != nil{return}
             await fetchUserData()
