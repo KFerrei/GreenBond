@@ -17,6 +17,7 @@ struct ReusableBondView: View {
     @Binding var commentToShow: Comment?
     @Binding var challengeToShow: BondChallenges?
     @Binding var nbChallenges: Int
+    @Binding var nbComments: Int
         
     @State var isFetching: Bool = true
     
@@ -130,6 +131,7 @@ struct ReusableBondView: View {
                     commentChallenges.append(contentsOf: fetchedPosts)
                     isFetching = false
                     need_fetchingComment = false
+                    nbComments = commentChallenges.count
                     cacheComment(commentChallenges)
                 })
             }catch{
@@ -168,6 +170,3 @@ struct ReusableBondView: View {
     }
 }
 
-#Preview {
-    ContentView()
-}

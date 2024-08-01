@@ -18,6 +18,7 @@ struct BondView: View {
     @State var commentToShow: Comment? = nil
     @State var challengeToShow: BondChallenges? = nil
     @State var nbChallenges: Int = 0
+    @State var nbComments: Int = 0
     
     var body: some View {
         
@@ -58,7 +59,7 @@ struct BondView: View {
             .padding(.horizontal, 20)
             .padding(.top, -10)
             
-            ReusableBondView(bondChallenges: $recentsPosts, commentChallenges: $recentComments, myProfile: $myProfile, openComment: $openComment, commentToShow: $commentToShow, challengeToShow: $challengeToShow, nbChallenges: $nbChallenges)
+            ReusableBondView(bondChallenges: $recentsPosts, commentChallenges: $recentComments, myProfile: $myProfile, openComment: $openComment, commentToShow: $commentToShow, challengeToShow: $challengeToShow, nbChallenges: $nbChallenges, nbComments: $nbComments)
                 .hAlign(.center)
                 .vAlign(.center)
             
@@ -87,7 +88,7 @@ struct BondView: View {
         }
         .fullScreenCover(isPresented: $openComment) {
             if let challenge = challengeToShow {
-                CreateComment(myProfile: $myProfile, challenge: challenge, comment: commentToShow, nbChallenges: nbChallenges)
+                CreateComment(myProfile: $myProfile, challenge: challenge, comment: commentToShow, nbChallenges: nbChallenges, nbComments: nbComments)
             }
         }
         .fullScreenCover(isPresented: $createNewPost){

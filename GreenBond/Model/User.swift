@@ -20,6 +20,7 @@ struct User: Identifiable, Codable, Equatable, Hashable{
     var userGreenCoins: Int
     var userUID: String
     var userProgress: [Float]
+    var userLonelinessProgress: [Float]
     var isAdmin: Bool
     var myWorkshops : [UserWorkshop]
     
@@ -38,12 +39,13 @@ struct User: Identifiable, Codable, Equatable, Hashable{
         case userGreenCoins
         case userUID
         case userProgress
+        case userLonelinessProgress
         case isAdmin
         case myWorkshops
         
     }
     
-    init(id: String? = nil, userGender: String, userGivenName: String, userFamilyName: String, userProfileURL: URL, userCity: String, userBirthDate: Date, userEmail: String, userRegisterDate: Date = Date(), userDatePremium: Date = Calendar.current.date(byAdding: .month, value: 1, to: Date())!, userGreenCoins: Int = 0, userUID: String, userProgress: [Float] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], isAdmin: Bool = false, myWorkshops: [UserWorkshop] = []){
+    init(id: String? = nil, userGender: String, userGivenName: String, userFamilyName: String, userProfileURL: URL, userCity: String, userBirthDate: Date, userEmail: String, userRegisterDate: Date = Date(), userDatePremium: Date = Calendar.current.date(byAdding: .month, value: 1, to: Date())!, userGreenCoins: Int = 0, userUID: String, userProgress: [Float] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], userLonelinessProgress: [Float] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], isAdmin: Bool = false, myWorkshops: [UserWorkshop] = []){
         self.id = id
         self.userGender = userGender
         self.userGivenName = userGivenName
@@ -57,6 +59,7 @@ struct User: Identifiable, Codable, Equatable, Hashable{
         self.userGreenCoins = userGreenCoins
         self.userUID = userUID
         self.userProgress = userProgress
+        self.userLonelinessProgress = userLonelinessProgress
         self.isAdmin = isAdmin
         self.myWorkshops = myWorkshops
     }
@@ -78,6 +81,7 @@ struct User: Identifiable, Codable, Equatable, Hashable{
         userGreenCoins = try container.decode(Int.self, forKey: .userGreenCoins)
         userUID = try container.decode(String.self, forKey: .userUID)
         userProgress = try container.decode([Float].self, forKey: .userProgress)
+        userLonelinessProgress = try container.decode([Float].self, forKey: .userLonelinessProgress)
         isAdmin = try container.decode(Bool.self, forKey: .isAdmin)
         myWorkshops = try container.decode([UserWorkshop].self, forKey: .myWorkshops)
     }
@@ -106,8 +110,10 @@ struct User: Identifiable, Codable, Equatable, Hashable{
         try container.encode(userGreenCoins, forKey: .userGreenCoins)
         try container.encode(userUID, forKey: .userUID)
         try container.encode(userProgress, forKey: .userProgress)
+        try container.encode(userLonelinessProgress, forKey: .userLonelinessProgress)
         try container.encode(isAdmin, forKey: .isAdmin)
         try container.encode(myWorkshops, forKey: .myWorkshops)
+        
     }
     
     mutating func sortWorkshopsByDate() ->  [UserWorkshop]{

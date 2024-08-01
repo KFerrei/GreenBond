@@ -68,7 +68,7 @@ struct ProfileContent: View {
                         .padding(10)
                         .hAlign(.center)
                     
-                    BarGraphBuilder(dataPoints: user.userProgress)
+                    BarGraphBuilder(dataPoints: user.userProgress, progressValue: user.userLonelinessProgress)
                     
                     Text("my workshops")
                         .font(.title)
@@ -174,9 +174,5 @@ struct ProfileContent: View {
             showError.toggle()
         })
     }
-}
-
-#Preview {
-    MainView()
 }
 

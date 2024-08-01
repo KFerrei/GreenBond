@@ -49,14 +49,14 @@ struct CustomTabBar: View {
                 } label:{
                     if selectedTab == .bond{
                         VStack{
-                            Image(systemName: "trophy.circle.fill")
+                            Image(systemName: "leaf.circle.fill")
                                 .resizable()
                                 .frame(width: 40, height: 40)
                             Text("bond")
                         }
                     } else {
                         VStack{
-                            Image(systemName: "trophy.circle")
+                            Image(systemName: "leaf.circle")
                                 .resizable()
                                 .frame(width: 40, height: 40)
                             Text("bond")
@@ -70,14 +70,14 @@ struct CustomTabBar: View {
                 } label:{
                     if selectedTab == .engage{
                         VStack{
-                            Image(systemName: "hammer.circle.fill")
+                            Image(systemName: "figure.2.circle.fill")
                                 .resizable()
                                 .frame(width: 40, height: 40)
                             Text("engage")
                         }
                     } else {
                         VStack{
-                            Image(systemName: "hammer.circle")
+                            Image(systemName: "figure.2.circle")
                                 .resizable()
                                 .frame(width: 40, height: 40)
                             Text("engage")

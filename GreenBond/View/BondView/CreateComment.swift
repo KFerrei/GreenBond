@@ -18,8 +18,10 @@ struct CreateComment: View {
     var challenge: BondChallenges?
     var comment : Comment?
     var nbChallenges : Int
+    var nbComments: Int
     
     @State private var postText: String = ""
+    @State private var sliderValue: Float = 0
     
     @Environment(\.dismiss) private var dismiss
     @State private var isLoading: Bool = false
@@ -121,6 +123,21 @@ struct CreateComment: View {
                     
                     
                     if comment == nil{
+                        
+                        Text("Do you feel alone today?")
+                            .font(.headline)
+                            .padding()
+                        
+                        HStack {
+                            Text("Yes")
+                            Slider(value: $sliderValue, in: 0...1)
+                            Text("No")
+                        }
+                        .padding()
+                        
+                        Text("\(nuancedResponse(for: sliderValue))")
+                            .padding()
+                        
                         Text("Description:")
                             .font(.callout)
                             .italic()
@@ -159,6 +176,23 @@ struct CreateComment: View {
         .alert(errorMessage, isPresented: $showError, actions: {})
         .overlay{
             LoadingView(show: $isLoading)
+        }
+    }
+    
+    func nuancedResponse(for value: Float) -> String {
+        switch value {
+        case 0..<0.2:
+            return "Strongly Yes"
+        case 0.2..<0.4:
+            return "Yes"
+        case 0.4..<0.6:
+            return "Neutral"
+        case 0.6..<0.8:
+            return "No"
+        case 0.8...1:
+            return "Strongly No"
+        default:
+            return "Neutral"
         }
     }
     
@@ -202,6 +236,9 @@ struct CreateComment: View {
         do {
             myProfile?.userGreenCoins = myProfile!.userGreenCoins + challenge!.greenPoints
             myProfile?.userProgress[Int(Calendar.current.component(.month, from: Date()))-1] =  myProfile!.userProgress[Int(Calendar.current.component(.month, from: Date()))-1] + 100.0/Float(nbChallenges)
+            
+            let a = (myProfile!.userLonelinessProgress[Int(Calendar.current.component(.month, from: Date()))-1] * Float(nbComments) + sliderValue)
+            myProfile?.userLonelinessProgress[Int(Calendar.current.component(.month, from: Date()))-1] = a/Float(nbComments+1)
             
             let doc = Firestore.firestore().collection("Users").document(myProfile!.userUID)
             
